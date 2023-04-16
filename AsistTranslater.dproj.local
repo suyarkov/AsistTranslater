@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.390,C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\GitClicker\AsistTranslater\AsistTranslater.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.914,C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\GitClicker\AsistTranslater\FrmMain.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.914,C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\GitClicker\AsistTranslater\FrmMain.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.216,=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.575,=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>
