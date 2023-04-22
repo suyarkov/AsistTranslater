@@ -10,4 +10,9 @@ object SQLiteModule: TSQLiteModule
     Left = 43
     Top = 15
   end
+  object SQLQuery: TFDQuery
+    Connection = SQL
+    Left = 104
+    Top = 16
+  end
 end

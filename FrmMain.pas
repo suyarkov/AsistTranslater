@@ -19,7 +19,7 @@ uses
   FrmDataSQLite, Vcl.DBCtrls,
   FireDAC.Comp.DataSet, Data.FMTBcd, Data.DB, Data.SqlExpr, Vcl.Menus,
   Classes.channel,
-  REST.JSON;
+  REST.JSON, PNGImage;
 
 type
   TFormMain = class(TForm)
@@ -69,7 +69,7 @@ function ParamValue(ParamName, JSONString: string): string;
 const
   StripChars: set of char = ['"', ':', ','];
 var
-  i, j: integer;
+  i, j: Integer;
 begin
   i := Pos(LowerCase(ParamName), LowerCase(JSONString));
   if i > 0 then
@@ -105,7 +105,7 @@ var
   FRest: TRestClient;
   FRequest: TRestrequest;
   FResponse: TRestResponse;
-  i: integer;
+  i: Integer;
   Key: String;
   LParam: TRESTRequestParameter;
   Boundary: string;
@@ -173,7 +173,7 @@ var
   AResponce: IHTTPResponse;
   FHTTPClient: THTTPClient;
   AAPIUrl: String;
-  j: integer;
+  j: Integer;
   jpegimg: TJPEGImage;
   s: string;
 begin
@@ -198,7 +198,7 @@ begin
       Memo1.Text := AResponce.StatusText;
       jpegimg := TJPEGImage.Create;
       jpegimg.LoadFromStream(AResponce.ContentStream);
-      Image1.Picture.Assign(jpegimg)
+      Image1.Picture.Assign(jpegimg);
     except
       // showmessage('Ќе ѕусто1');
     end;
@@ -210,11 +210,13 @@ var
   vString: string;
   OAuth2: TOAuth;
   vObj: Tchannel;
-  i: integer;
+  i: Integer;
   urlget: string;
   AJsonString: string;
   vChannel: TShortChannel;
   vImgUrl: string;
+  g: TGraphic;
+  ssimg : TStringStream ;
 begin
   vObj.Create;
   vObj := TJson.JsonToObject<Tchannel>(Memo1.Text);
@@ -226,8 +228,22 @@ begin
     // vChannel.img_channel
     vImgUrl := vObj.Items[i].snippet.thumbnails.default.URL;
     Edit4.Text := vImgUrl;
-    vChannel.img_channel :=  TBlobType(SQLiteModule.LoadAnyImage(vImgUrl));
+//    ssimg := SQLiteModule.LoadAnyImage(vImgUrl);
+    vChannel.img_channel := TBlobType(SQLiteModule.LoadAnyImage(vImgUrl));
+    vChannel.img_channel := TBlobType(ssimg);
+    {jpegimg.SaveToStream(Ss);
+    jpg := TJpegImage.Create;
+    jpg.Assign(Image1.Picture.Graphic);
+    jpg.CompressionQuality := 20;
+    jpg.Compress;
+    ms := TMemoryStream.Create;
+    jpg.SaveToStream(ms);}
 
+    // g:=TJpegimage.Create;
+//    g := TPNGImage.Create;
+//    g.LoadFromStream(ssimg);
+//    g.Assign(ssimg);
+//    Image1.Picture.Assign(g);
     vChannel.refresh_token := Edit2.Text;
     vChannel.lang := vObj.Items[i].snippet.defaultLanguage;
     vChannel.sel_lang := 'ru';
@@ -274,10 +290,14 @@ end;
 procedure TFormMain.ButtonLoadChannelsClick(Sender: TObject);
 var
   //
-  i: integer;
+  i: Integer;
   results: TDataSet;
+  g: TGraphic;
 begin
 
+  // g:=TJpegimage.Create;
+  g := TPNGImage.Create;
+  // g:=TBitmap.Create;
   for i := 0 to 1000 do
     StringGrid1.Rows[i].Clear;
 
@@ -300,6 +320,14 @@ begin
         results.FieldByName('name_channel').AsString;
       StringGrid1.Cells[2, i - 1] := results.FieldByName('img_channel')
         .AsString;
+      if i = 1 then
+      begin
+        // Image1.Picture.Assign(results.FieldByName('img_channel'));
+        g.Assign(results.FieldByName('img_channel'));
+        Image1.Picture.Assign(g);
+        // g:TGraphic;
+        // Image1.Picture.LoadFromStream(results.FieldByName('img_channel'),ftBlob)
+      end;
       StringGrid1.Cells[3, i - 1] :=
         results.FieldByName('refresh_token').AsString;
       StringGrid1.Cells[4, i - 1] := results.FieldByName('lang').AsString;
@@ -365,20 +393,20 @@ procedure TFormMain.IdTCPServer1Execute(AContext: TIdContext);
 const
   cNameFile: string = 'AccessCode';
 var
-  Port: integer;
-  PeerPort: integer;
+  Port: Integer;
+  PeerPort: Integer;
   PeerIP: string;
 
   msgFromClient: string;
   vCode: string;
-  vPosBegin, vPosEnd: integer;
+  vPosBegin, vPosEnd: Integer;
   vAccessCode: string;
 
   // vProfile: TProfile;
   vPath: string;
   vFullNameFile: string;
   vFileText: TStringList;
-  i: integer;
+  i: Integer;
 
 begin
 
@@ -471,6 +499,8 @@ begin
   end;
 
   AContext.Connection.IOHandler.CloseGracefully;
+  AContext.Connection.Socket.CloseGracefully;
+  AContext.Connection.Socket.Close;
 end;
 
 procedure TFormMain.StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
@@ -478,23 +508,37 @@ procedure TFormMain.StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
 var
   img: TPicture;
 begin
+  {
+    vRect.Create(Rect.Left+2,Rect.Top+2,Rect.Left+20,Rect.Top+20);
+    if (ACol = 4) then
+    begin
+    if (LanguagesGrid.Cells[4, ARow] = '1') then
+    begin
+    LanguagesGrid.Canvas.StretchDraw(vRect, Image1.Picture.Graphic);
+    end
+    else
+    begin
+    LanguagesGrid.Canvas.StretchDraw(vRect, Image2.Picture.Graphic);
+    end;
+    end; }
+
   // создание графического объекта
   img := TPicture.Create;
 
   // загрузка в графическую переменную изображени€ из внешнего файла
-  img.LoadFromFile('001.bmp');
+  // img.LoadFromFile('001.bmp');
 
   // условие, определ€ющее нужную €чейку
-  if ((ACol = 3) and (ARow = 1)) then begin
+  if ((ACol = 3) and (ARow = 1)) then
+  begin
 
-        // назначение размера €чейки по ширине и высоте
-        StringGrid1.ColWidths[ACol] := img.Width;
-        StringGrid1.RowHeights[ARow] := img.Height;
+    // назначение размера €чейки по ширине и высоте
+    StringGrid1.ColWidths[ACol] := img.Width;
+    StringGrid1.RowHeights[ARow] := img.Height;
 
-        // вывод рисунка в текущей €чейке
-        StringGrid1.Canvas.StretchDraw(Rect, img.Graphic);
-   end;
-
+    // вывод рисунка в текущей €чейке
+    StringGrid1.Canvas.StretchDraw(Rect, img.Graphic);
+  end;
 
 end;
 

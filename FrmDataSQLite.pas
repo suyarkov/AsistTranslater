@@ -30,6 +30,7 @@ type
 type
   TSQLiteModule = class(TDataModule)
     SQL: TFDConnection;
+    SQLQuery: TFDQuery;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -37,7 +38,7 @@ type
     { Public declarations }
     function SelRefreshToken(): tDataSet;
     function InsRefreshToken(pShortChanel: TShortChannel): integer;
-    function LoadAnyImage(pUrl: string): TStringStream;// TPicture;
+    function LoadAnyImage(pUrl: string): TStringStream; // TPicture;
   end;
 
 var
@@ -99,6 +100,8 @@ begin
       pShortChanel.img_channel, pShortChanel.refresh_token, pShortChanel.lang,
       pShortChanel.sel_lang, pShortChanel.deleted]);
 
+    // проапдейтим рисунок
+
   except
     on E: Exception do
     begin
@@ -106,18 +109,33 @@ begin
       showmessage('Exception raised with message: ' + E.Message);
     end;
   end;
-
   {
-    sldb.BeginTransaction;
-    try
-    St := AnsiString(Format('INSERT INTO maplog(date, ...'))); // обрезано для краткости
-    // Не выполняется при запуске из реестра
-    sldb.ExecSQL(St);
-    sldb.Commit;
-    except
-    sldb.Rollback;
+    ms := TMemoryStream.Create;
+    ms.LoadFromFile('C:\Pictures\l.jpg');
+    if ms <> nil then
+    begin
+    sq := TSQLQuery.Create(nil);
+    sq.SQLConnection := con1;
+    sq.SQL.Text := 'update db1 set picture= :photo ;';
+    sq.Params.ParseSQL(sq.SQL.Text, true);
+    sq.Params.ParamByName('photo').LoadFromStream(ms, ftBlob);
+    sq.ExecSQL();
     end;
   }
+  SQLQuery.SQL.Text := 'update refresh_token set img_channel= :photo where id_channel = :id;';
+  //SQLQuery.Params.ParseSQL(sq.SQL.Text, true);
+  SQLQuery.Params[0].Value := pShortChanel.img_channel;
+  SQLQuery.Params[1].Value := pShortChanel.id_channel;
+   SQLQuery.ExecSQL;
+//  SQLQuery.Params.ParamByName('photo').LoadFromStream(ms, ftBlob);
+  {
+    SQLQuery.SQL.Text :=
+    'Insert into IMGBlob (ID,Blob,typ) Values (:ID,:BLOB,:typ)';
+    SQLQuery .. Parameters[0].Value := 1;
+    SQLQuery.Parameters[1].Assign(jp);
+    SQLQuery.Parameters[2].Value := itJPG;
+    SQLQuery.ExecSQL; }
+
   // SQLiteModule.ClickConnection.Close;
   SQLiteModule.SQL.Commit;
   Result := 1;
@@ -136,7 +154,7 @@ begin
   }
 end;
 
-function TSQLiteModule.LoadAnyImage(pUrl: string): TStringStream;//TPicture;
+function TSQLiteModule.LoadAnyImage(pUrl: string): TStringStream; // TPicture;
 var
   AValue, ConstSourceLang, ConstTargetLang: String;
   AResponce: IHTTPResponse;
@@ -145,9 +163,9 @@ var
   j: integer;
   jpegimg: TJPEGImage;
   s: string;
-  Ss  : TStringStream;
-  St : string;
-  Image1:Timage;
+  Ss: TStringStream;
+  St: string;
+  Image1: Timage;
 begin
   begin
     s := StringReplace(pUrl, #13, '', [rfReplaceAll, rfIgnoreCase]);
@@ -169,16 +187,16 @@ begin
       jpegimg := TJPEGImage.Create;
       jpegimg.LoadFromStream(AResponce.ContentStream);
       jpegimg.SaveToStream(Ss);
-      //Result.Assign(jpegimg);
- //     Image1.Picture.Assign(jpegimg)
-//      Result.Assign(jpegimg);
-//      Ss := TStringStream.Create(st);
-//      Image1.Picture.Bitmap.SaveToStream(   (Ss);
+      // Result.Assign(jpegimg);
+      // Image1.Picture.Assign(jpegimg)
+      // Result.Assign(jpegimg);
+      // Ss := TStringStream.Create(st);
+      // Image1.Picture.Bitmap.SaveToStream(   (Ss);
     except
       // showmessage('Не Пусто1');
     end;
   end;
-
+  Result := Ss;
 end;
 
 end.
