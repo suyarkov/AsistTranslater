@@ -43,6 +43,8 @@ type
     ButtonLoadChannels: TButton;
     Image1: TImage;
     Edit4: TEdit;
+    Button1: TButton;
+    Image2: TImage;
     procedure ButtonSignInClick(Sender: TObject);
     procedure ButtonStartStopServerClick(Sender: TObject);
     procedure IdTCPServer1Execute(AContext: TIdContext);
@@ -52,6 +54,7 @@ type
     procedure ButtonBuyClick(Sender: TObject);
     procedure StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -167,6 +170,35 @@ begin
 
 end;
 
+procedure TFormMain.Button1Click(Sender: TObject);
+var
+  vSS: TStringStream;
+  jpegimg: TJPEGImage;
+
+  SS: TStringStream;
+  g: TGraphic;
+
+  S: AnsiString;
+  vBlob : TBlobType;
+begin
+  // UCcD7KQCDJBAJovCngaAdObA
+  //vBlob := TBlobType.Create;
+  vSS := TStringStream.Create();
+  Image1.Picture.SaveToStream(vSS);
+  //Image1.Picture.SaveToFile('D:\GitClicker\AsistTranslater\temp.png');
+  S := vSS.DataString;
+  SQLiteModule.SaveTestImage(S);
+  g := TPNGImage.Create;
+  SS := TStringStream.Create(S);
+  //vBlob := TBlobType(vSS.DataString);
+  g.LoadFromStream(SS);
+  Image2.Picture.Assign(g);
+  SS.Free;
+  vSS.Free;
+  g.Free;
+
+end;
+
 procedure TFormMain.ButtonBuyClick(Sender: TObject);
 var
   AValue, ConstSourceLang, ConstTargetLang: String;
@@ -175,11 +207,11 @@ var
   AAPIUrl: String;
   j: Integer;
   jpegimg: TJPEGImage;
-  s: string;
+  S: string;
 begin
   begin
-    s := StringReplace(Edit4.Text, #13, '', [rfReplaceAll, rfIgnoreCase]);
-    AAPIUrl := StringReplace(s, #10, '', [rfReplaceAll, rfIgnoreCase]);
+    S := StringReplace(Edit4.Text, #13, '', [rfReplaceAll, rfIgnoreCase]);
+    AAPIUrl := StringReplace(S, #10, '', [rfReplaceAll, rfIgnoreCase]);
     Edit4.Text := AAPIUrl;
     FHTTPClient := THTTPClient.Create;
     FHTTPClient.UserAgent :=
@@ -216,7 +248,7 @@ var
   vChannel: TShortChannel;
   vImgUrl: string;
   g: TGraphic;
-  ssimg : TStringStream ;
+  ssimg: TStringStream;
 begin
   vObj.Create;
   vObj := TJson.JsonToObject<Tchannel>(Memo1.Text);
@@ -228,22 +260,10 @@ begin
     // vChannel.img_channel
     vImgUrl := vObj.Items[i].snippet.thumbnails.default.URL;
     Edit4.Text := vImgUrl;
-//    ssimg := SQLiteModule.LoadAnyImage(vImgUrl);
+    // ssimg := SQLiteModule.LoadAnyImage(vImgUrl);
     vChannel.img_channel := TBlobType(SQLiteModule.LoadAnyImage(vImgUrl));
     vChannel.img_channel := TBlobType(ssimg);
-    {jpegimg.SaveToStream(Ss);
-    jpg := TJpegImage.Create;
-    jpg.Assign(Image1.Picture.Graphic);
-    jpg.CompressionQuality := 20;
-    jpg.Compress;
-    ms := TMemoryStream.Create;
-    jpg.SaveToStream(ms);}
 
-    // g:=TJpegimage.Create;
-//    g := TPNGImage.Create;
-//    g.LoadFromStream(ssimg);
-//    g.Assign(ssimg);
-//    Image1.Picture.Assign(g);
     vChannel.refresh_token := Edit2.Text;
     vChannel.lang := vObj.Items[i].snippet.defaultLanguage;
     vChannel.sel_lang := 'ru';

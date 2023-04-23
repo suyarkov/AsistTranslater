@@ -190,8 +190,14 @@ object FormMain: TFormMain
       ParentFont = False
     end
     object Image1: TImage
-      Left = 488
-      Top = 43
+      Left = 479
+      Top = 12
+      Width = 105
+      Height = 105
+    end
+    object Image2: TImage
+      Left = 479
+      Top = 122
       Width = 105
       Height = 105
     end
@@ -387,6 +393,15 @@ object FormMain: TFormMain
       Caption = 'ButtonLoadChannels'
       TabOrder = 8
       OnClick = ButtonLoadChannelsClick
+    end
+    object Button1: TButton
+      Left = 494
+      Top = 188
+      Width = 130
+      Height = 25
+      Caption = #1042#1089#1090#1072#1074#1082#1072' '#1073#1083#1086#1073
+      TabOrder = 9
+      OnClick = Button1Click
     end
   end
   object IdTCPServer1: TIdTCPServer

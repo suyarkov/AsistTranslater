@@ -14,7 +14,8 @@ uses
   IdTCPClient, System.Net.HTTPClient,
   System.NetEncoding,
   System.Types, System.UITypes,
-  Vcl.Imaging.jpeg, Vcl.ExtCtrls;
+  Vcl.Imaging.jpeg, Vcl.ExtCtrls,
+  PNGImage;
 
 type
   TShortChannel = record
@@ -39,6 +40,8 @@ type
     function SelRefreshToken(): tDataSet;
     function InsRefreshToken(pShortChanel: TShortChannel): integer;
     function LoadAnyImage(pUrl: string): TStringStream; // TPicture;
+    procedure SaveTestImage(pSS3: AnsiString); // TPicture;
+    procedure SaveInBaseImage(pFile: String); // TPicture;
   end;
 
 var
@@ -122,12 +125,13 @@ begin
     sq.ExecSQL();
     end;
   }
-  SQLQuery.SQL.Text := 'update refresh_token set img_channel= :photo where id_channel = :id;';
-  //SQLQuery.Params.ParseSQL(sq.SQL.Text, true);
+  SQLQuery.SQL.Text :=
+    'update refresh_token set img_channel= :photo where id_channel = :id;';
+  // SQLQuery.Params.ParseSQL(sq.SQL.Text, true);
   SQLQuery.Params[0].Value := pShortChanel.img_channel;
   SQLQuery.Params[1].Value := pShortChanel.id_channel;
-   SQLQuery.ExecSQL;
-//  SQLQuery.Params.ParamByName('photo').LoadFromStream(ms, ftBlob);
+  SQLQuery.ExecSQL;
+  // SQLQuery.Params.ParamByName('photo').LoadFromStream(ms, ftBlob);
   {
     SQLQuery.SQL.Text :=
     'Insert into IMGBlob (ID,Blob,typ) Values (:ID,:BLOB,:typ)';
@@ -197,6 +201,106 @@ begin
     end;
   end;
   Result := Ss;
+end;
+
+procedure TSQLiteModule.SaveTestImage(pSS3: AnsiString); // TPicture;
+var
+  AValue, ConstSourceLang, ConstTargetLang: String;
+  AResponce: IHTTPResponse;
+  FHTTPClient: THTTPClient;
+  AAPIUrl: String;
+  j: integer;
+  jpegimg: TJPEGImage;
+  s: string;
+  Ss: TStringStream;
+  St: string;
+  Image1: Timage;
+  jp:TJpegimage;
+  g: TGraphic;
+
+begin
+  begin
+    //vS := pSS.DataString;
+    g := TPNGImage.Create;
+    //g.Assign(pSS);
+    //Image1.Picture.Assign(g);
+    SQLQuery.SQL.Text :=
+//    'update refresh_token set id_channel= "Проба Update" where id_channel = "UCcD7KQCDJBAJovCngaAdObA";';
+    'update refresh_token set img_channel= :photo where id_channel = "UCcD7KQCDJBAJovCngaAdObA";';
+    // SQLQuery.Params.ParseSQL(sq.SQL.Text, true);
+    //Image1.Create();
+    //SS := TStringStream.Create(S);
+    //g.LoadFromStream(pSS3);
+    //SQLQuery.Params[0].Value := TBlobType(pSS);
+    //SQLQuery.Params[0].Assign(g);
+    SQLQuery.Params[0].AsBlob := pSS3;
+    //SQLQuery.Params.ParamByName('photo').LoadFromStream(pSS, ftBlob);
+    //VaAssign(pSS);
+    SQLQuery.ExecSQL;
+
+    // SQLQuery.Params.ParamByName('photo').LoadFromStream(ms, ftBlob);
+    {
+      SQLQuery.SQL.Text :=
+      'Insert into IMGBlob (ID,Blob,typ) Values (:ID,:BLOB,:typ)';
+      SQLQuery .. Parameters[0].Value := 1;
+      SQLQuery.Parameters[1].Assign(jp);
+      SQLQuery.Parameters[2].Value := itJPG;
+      SQLQuery.ExecSQL; }
+
+    // SQLiteModule.ClickConnection.Close;
+    SQLiteModule.SQL.Commit;
+
+  end;
+end;
+
+procedure TSQLiteModule.SaveInBaseImage (pFile: String); // TPicture;
+var
+  AValue, ConstSourceLang, ConstTargetLang: String;
+  AResponce: IHTTPResponse;
+  FHTTPClient: THTTPClient;
+  AAPIUrl: String;
+  j: integer;
+  jpegimg: TJPEGImage;
+  s: string;
+  Ss: TStringStream;
+  St: string;
+  Image1: Timage;
+  jp:TJpegimage;
+  g: TGraphic;
+
+  vS: AnsiString;
+begin
+  begin
+    //vS := pSS.DataString;
+    g := TPNGImage.Create;
+    //g.Assign(pSS);
+    //Image1.Picture.Assign(g);
+    SQLQuery.SQL.Text :=
+//    'update refresh_token set id_channel= "Проба Update" where id_channel = "UCcD7KQCDJBAJovCngaAdObA";';
+    'update refresh_token set img_channel= :photo where id_channel = "UCcD7KQCDJBAJovCngaAdObA";';
+    // SQLQuery.Params.ParseSQL(sq.SQL.Text, true);
+    //Image1.Create();
+    SS := TStringStream.Create(S);
+    g.LoadFromStream(SS);
+    //SQLQuery.Params[0].Value := TBlobType(pSS);
+    //SQLQuery.Params[0].AsBlob .Assign(g);
+    //SQLQuery.Params.ParamByName('photo').LoadFromStream(pSS, ftBlob);
+    //VaAssign(pSS);
+    SQLQuery.ExecSQL;
+   //  Query.ParamByName('Pict').AsBlob := S;
+    // SQLQuery.Params.ParamByName('photo').LoadFromStream(ms, ftBlob);
+    {
+      SQLQuery.SQL.Text :=
+      'Insert into IMGBlob (ID,Blob,typ) Values (:ID,:BLOB,:typ)';
+      SQLQuery .. Parameters[0].Value := 1;
+      SQLQuery.Parameters[1].Assign(jp);
+      SQLQuery.Parameters[2].Value := itJPG;
+      SQLQuery.ExecSQL; }
+
+    // SQLiteModule.ClickConnection.Close;
+    SQLiteModule.SQL.Commit;
+
+  end;
 end;
 
 end.
