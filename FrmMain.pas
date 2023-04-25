@@ -18,7 +18,7 @@ uses
   System.ImageList, Vcl.ImgList,
   FrmDataSQLite, Vcl.DBCtrls,
   FireDAC.Comp.DataSet, Data.FMTBcd, Data.DB, Data.SqlExpr, Vcl.Menus,
-  Classes.channel,
+  Classes.channel, ChannelPanel,
   REST.JSON, PNGImage;
 
 type
@@ -34,12 +34,11 @@ type
     IdTCPServer1: TIdTCPServer;
     ButtonStartStopServer: TButton;
     Edit1: TEdit;
-    Edit2: TEdit;
-    Edit3: TEdit;
+    EdRefresh_token: TEdit;
+    EdAccess_token: TEdit;
     ButtonGetChannel: TButton;
     ButtonGetChannel2: TButton;
     Memo1: TMemo;
-    StringGrid1: TStringGrid;
     ButtonLoadChannels: TButton;
     Image1: TImage;
     Edit4: TEdit;
@@ -47,6 +46,7 @@ type
     Image2: TImage;
     Button2: TButton;
     Button3: TButton;
+    ScrollBox1: TScrollBox;
     procedure ButtonSignInClick(Sender: TObject);
     procedure ButtonStartStopServerClick(Sender: TObject);
     procedure IdTCPServer1Execute(AContext: TIdContext);
@@ -54,11 +54,11 @@ type
     procedure ButtonGetChannel2Click(Sender: TObject);
     procedure ButtonLoadChannelsClick(Sender: TObject);
     procedure ButtonBuyClick(Sender: TObject);
-    procedure StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
-      Rect: TRect; State: TGridDrawState);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure DinPanelMouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
   private
     { Private declarations }
     ShortChannels: TShortChannels;
@@ -68,10 +68,35 @@ type
 
 var
   FormMain: TFormMain;
+  PanChannels: array [1 .. 20] of TMyPanel;
+  lastPanel: TPanel;
 
 implementation
 
 {$R *.dfm}
+
+procedure TFormMain.DinPanelMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+var
+  panel: TPanel;
+begin
+  panel := Sender as TPanel;
+  if lastPanel <> nil then
+    if lastPanel <> panel then
+    begin
+      lastPanel.Color := clBtnFace;
+      lastPanel.Font.Color := clBlack;
+      lastPanel := nil;
+    end;
+
+  begin
+    panel.Color := clWhite; // clblack;
+    // panel.Font.Color := clWhite;
+    // запоминаем панельку, над которой изменили цвет,
+    // чтобы когда произойдет движенье мышью над формой вернуть его обратно
+    lastPanel := panel;
+  end;
+end;
 
 function ParamValue(ParamName, JSONString: string): string;
 const
@@ -185,22 +210,11 @@ var
   S: AnsiString;
   vBlob: TBlobType;
 begin
-  // UCcD7KQCDJBAJovCngaAdObA
-  // vBlob := TBlobType.Create;
   vSS := TStringStream.Create();
   Image2.Picture.SaveToStream(vSS);
-  // Image1.Picture.SaveToFile('D:\GitClicker\AsistTranslater\temp.png');
   S := vSS.DataString;
   SQLiteModule.SaveTestImage(S);
-  // g := TPNGImage.Create;
-  // SS := TStringStream.Create(S);
-  // vBlob := TBlobType(vSS.DataString);
-  // g.LoadFromStream(SS);
-  // Image2.Picture.Assign(g);
-  // SS.Free;
   vSS.Free;
-  // g.Free;
-
 end;
 
 procedure TFormMain.Button2Click(Sender: TObject);
@@ -248,11 +262,7 @@ begin
   // g:=TBitmap.Create;
 
   // очищаю грид
-  for i := 0 to 1000 do
-    StringGrid1.Rows[i].Clear;
 
-  StringGrid1.ColCount := 7;
-  StringGrid1.RowCount := 0;
   i := 0;
 
   // загружаю данные из локальной таблицы
@@ -265,23 +275,20 @@ begin
     if results[i].id_channel <> '' then
 
     begin
-      StringGrid1.Cells[0, i - 1] := results[i].id_channel;
-      StringGrid1.Cells[1, i - 1] := results[i].name_channel;
-      // StringGrid1.Cells[2, i - 1] := String(results[i].img_channel);
-      // .AsString;
+      //StringGrid1.Cells[0, i - 1] := results[i].id_channel;
+      //StringGrid1.Cells[1, i - 1] := results[i].name_channel;
       vBlob := results[i].img_channel;
-      //vBlobF.;
-      //vBlobF := TBlobField(vBlob);
-      //vSS := TStringStream.Create();
-//        Image2.Picture.SaveToStream(vSS);
-      //vBlobF.SaveToStream(vSS);
-      //S := vSS.DataString;
-      //  SQLiteModule.SaveTestImage(S);
-
+      // vBlobF.;
+      // vBlobF := TBlobField(vBlob);
+      // vSS := TStringStream.Create();
+      // Image2.Picture.SaveToStream(vSS);
+      // vBlobF.SaveToStream(vSS);
+      // S := vSS.DataString;
+      // SQLiteModule.SaveTestImage(S);
 
       if i = 1 then
       begin
-        //Image1.Picture.LoadFromStream(vSS);
+        // Image1.Picture.LoadFromStream(vSS);
       end;
       // Image1.Picture.
 
@@ -293,12 +300,12 @@ begin
       // g:TGraphic;
       // Image1.Picture.LoadFromStream(results.FieldByName('img_channel'),ftBlob)
 
-      StringGrid1.Cells[3, i - 1] := results[i].refresh_token;
-      StringGrid1.Cells[4, i - 1] := results[i].lang;
-      StringGrid1.Cells[5, i - 1] := results[i].sel_lang;
-      StringGrid1.Cells[6, i - 1] := IntToStr(results[i].deleted);
+      //StringGrid1.Cells[3, i - 1] := results[i].refresh_token;
+      //StringGrid1.Cells[4, i - 1] := results[i].lang;
+      //StringGrid1.Cells[5, i - 1] := results[i].sel_lang;
+      //StringGrid1.Cells[6, i - 1] := IntToStr(results[i].deleted);
 
-      StringGrid1.RowCount := i;
+      //StringGrid1.RowCount := i;
     end;
     ShortChannels := results;
   end;
@@ -396,39 +403,22 @@ begin
       // SS := TStringStream.Create(S);
       // showmessage('ѕусто 9');
       // g.LoadFromStream(SQLiteModule.LoadAnyImage(vImgUrl));
-      showmessage('ѕусто 10');
+      // showmessage('ѕусто 10');
       // Image2.Picture.Assign(g);
 
       jpegimg := TJPEGImage.Create;
       // memo1.Text := SQLiteModule.LoadAnyImage(vImgUrl);
       jpegimg.LoadFromStream(AResponce.ContentStream);
-      showmessage('ѕусто 111');
+      // showmessage('ѕусто 111');
       Image2.Picture.Assign(jpegimg);
-      showmessage('ѕусто 112');
       // Image2.Picture.LoadFromStream(SQLiteModule.LoadAnyImage(vImgUrl));
-      showmessage('ѕусто 11');
-
-      // vSS := SQLiteModule.LoadAnyImage(vImgUrl);
-      // jpegimg := TJPEGImage.Create;
-      // jpegimg.LoadFromStream(AResponce.ContentStream);
-      // jpegimg.SaveToStream(Ss);
-      // Result.Assign(jpegimg);
-      // Image2.Picture.Assign(jpegimg);
     except
-      showmessage('ѕусто 1');
     end;
-    // vSS := SQLiteModule.LoadAnyImage(vImgUrl);
-    // S := vSS.DataString;
-    // SQLiteModule.SaveTestImage(S);
 
-    // Image2.
-    // vChannel.img_channel := TBlobType(ssimg);
-
-    vChannel.refresh_token := Edit2.Text;
+    vChannel.refresh_token := EdRefresh_token.Text;
     vChannel.lang := vObj.Items[i].snippet.defaultLanguage;
-    vChannel.sel_lang := 'ru';
-    vChannel.deleted := 1;
-    // showmessage(vObj.items[i].snippet.title);
+    // vChannel.sel_lang := vObj.;
+    vChannel.deleted := 0;
   end;
 
   i := SQLiteModule.InsRefreshToken(vChannel);
@@ -458,12 +448,13 @@ begin
 
   Access_token := OAuth2.GetAccessToken;
   refresh_token := OAuth2.refresh_token;
-  Edit2.Text := refresh_token;
-  Edit3.Text := Access_token;
+  EdRefresh_token.Text := refresh_token;
+  EdAccess_token.Text := Access_token;
 
   vString := OAuth2.MyChannels;
   Memo1.Text := vString;
   OAuth2.Free;
+  ButtonGetChannel2.OnClick(Sender);
 
 end;
 
@@ -473,67 +464,52 @@ var
   i: Integer;
   results: TDataSet;
   g: TGraphic;
+  vPos: Integer;
 begin
 
   // g:=TJpegimage.Create;
   g := TPNGImage.Create;
   // g:=TBitmap.Create;
 
-  // очищаю грид
-  for i := 0 to 1000 do
-    StringGrid1.Rows[i].Clear;
-
-  StringGrid1.ColCount := 7;
-  StringGrid1.RowCount := 0;
-  i := 0;
+  i := 1;
 
   // загружаю данные из локальной таблицы
   results := SQLiteModule.SelRefreshToken();
 
-  // разбираю курсор по €чейкам, а хотелось бы сразу объект а не €чейки.
+  // разбираю курсор в объект
   if not results.IsEmpty then
   begin
     results.First;
-    // EditStatusConnect.Text := 'result Exists ' + IntToStr(StringGrid1.RowCount );
     while not results.Eof do
     begin
-      inc(i);
       // EditStatusConnect.Text := 'result Exists';
       // EditStatusConnect.Text := 'result Exists ' + IntToStr(StringGrid1.RowCount - 1);
-      StringGrid1.Cells[0, i - 1] := results.FieldByName('id_channel').AsString;
-      StringGrid1.Cells[1, i - 1] :=
-        results.FieldByName('name_channel').AsString;
-      // StringGrid1.Cells[2, i - 1] := results.FieldByName('img_channel')
-      // .AsString;
-      if i = 1 then
-      begin
-        // это рабочий вариант пр€мо с пол€ вз€ть, не из таблицы!!
-        g.Assign(results.FieldByName('img_channel'));
-        Image1.Picture.Assign(g);
-        // g:TGraphic;
-        // Image1.Picture.LoadFromStream(results.FieldByName('img_channel'),ftBlob)
-      end;
+      //StringGrid1.Cells[0, i - 1] := results.FieldByName('id_channel').AsString;
+{
       StringGrid1.Cells[3, i - 1] :=
         results.FieldByName('refresh_token').AsString;
       StringGrid1.Cells[4, i - 1] := results.FieldByName('lang').AsString;
       StringGrid1.Cells[5, i - 1] := results.FieldByName('sel_lang').AsString;
-      StringGrid1.Cells[6, i - 1] := results.FieldByName('deleted').AsString;
+      StringGrid1.Cells[6, i - 1] := results.FieldByName('deleted').AsString;  }
 
-      // EditStatusConnect.Text := 'result Exists ' + IntToStr(StringGrid1.RowCount - 1);
-      StringGrid1.RowCount := i;
+      vPos := (i - 1) * 120;
+      PanChannels[i] := TMyPanel.Create(ScrollBox1, vPos, i,
+        results.FieldByName('id_channel').AsString,
+        results.FieldByName('name_channel').AsString,
+        results.FieldByName('lang').AsString);
+      PanChannels[i].Parent := ScrollBox1;
+      PanChannels[i].ButtonDel.OnClick := Button1Click;
+      PanChannels[i].OnMouseMove := DinPanelMouseMove;
+        // это рабочий вариант пр€мо с пол€ вз€ть, не из таблицы!!
+      //  g.Assign(results.FieldByName('img_channel'));
+      //  Image1.Picture.Assign(g);
+      inc(i);
       results.Next;
     end;
-    StringGrid1.RowCount := i;
   end;
-  {
-    if SQLiteModule.ClickConnection.Messages <> nil then
-    for i := 0 to SQLiteModule.ClickConnection.Messages.ErrorCount - 1 do
-    begin
-    ListBox1.Items.Add(SQLiteModule.ClickConnection.Messages[i].Message);
-    end;
-    // Memo1.Lines.Add(FDConnection1.Messages[i].Message); }
 end;
 
+// ѕолучение прав от пользовател€ на канал
 procedure TFormMain.ButtonSignInClick(Sender: TObject);
 begin
   EditStatusConnect.Text := 'Waiting for connection ...';
@@ -684,45 +660,6 @@ begin
   AContext.Connection.IOHandler.CloseGracefully;
   AContext.Connection.Socket.CloseGracefully;
   AContext.Connection.Socket.Close;
-end;
-
-procedure TFormMain.StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
-  Rect: TRect; State: TGridDrawState);
-var
-  img: TPicture;
-begin
-  {
-    vRect.Create(Rect.Left+2,Rect.Top+2,Rect.Left+20,Rect.Top+20);
-    if (ACol = 4) then
-    begin
-    if (LanguagesGrid.Cells[4, ARow] = '1') then
-    begin
-    LanguagesGrid.Canvas.StretchDraw(vRect, Image1.Picture.Graphic);
-    end
-    else
-    begin
-    LanguagesGrid.Canvas.StretchDraw(vRect, Image2.Picture.Graphic);
-    end;
-    end; }
-
-  // создание графического объекта
-  img := TPicture.Create;
-
-  // загрузка в графическую переменную изображени€ из внешнего файла
-  // img.LoadFromFile('001.bmp');
-
-  // условие, определ€ющее нужную €чейку
-  if ((ACol = 3) and (ARow = 1)) then
-  begin
-
-    // назначение размера €чейки по ширине и высоте
-    StringGrid1.ColWidths[ACol] := img.Width;
-    StringGrid1.RowHeights[ARow] := img.Height;
-
-    // вывод рисунка в текущей €чейке
-    StringGrid1.Canvas.StretchDraw(Rect, img.Graphic);
-  end;
-
 end;
 
 end.

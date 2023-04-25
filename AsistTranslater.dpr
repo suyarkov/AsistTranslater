@@ -20,7 +20,9 @@ uses
   Classes.channel.item in 'Classes.channel.item.pas',
   Classes.channel.statistics in 'Classes.channel.statistics.pas',
   Classes.channel.items in 'Classes.channel.items.pas',
-  Classes.channel in 'Classes.channel.pas';
+  Classes.channel in 'Classes.channel.pas',
+  ChannelPanel in 'ChannelPanel.pas',
+  Unit1 in 'Unit1.pas' {Form1};
 
 {$R *.res}
 
@@ -30,5 +32,6 @@ begin
   TStyleManager.TrySetStyle('Silver');
   Application.CreateForm(TFormMain, FormMain);
   Application.CreateForm(TSQLiteModule, SQLiteModule);
+  Application.CreateForm(TForm1, Form1);
   Application.Run;
 end.

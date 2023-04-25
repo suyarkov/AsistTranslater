@@ -13,18 +13,16 @@ object FormMain: TFormMain
   TextHeight = 15
   object PanelButton: TPanel
     Left = 0
-    Top = 405
+    Top = 424
     Width = 772
-    Height = 97
+    Height = 78
     Align = alBottom
     Color = clCream
     ParentBackground = False
     TabOrder = 0
-    ExplicitTop = 401
-    ExplicitWidth = 661
     object ImageSignIn: TImage
       Left = 13
-      Top = 32
+      Top = 16
       Width = 41
       Height = 41
       Picture.Data = {
@@ -119,7 +117,7 @@ object FormMain: TFormMain
     end
     object ButtonSignIn: TButton
       Left = 49
-      Top = 32
+      Top = 16
       Width = 177
       Height = 41
       Caption = 'Sign In with Google'
@@ -134,7 +132,7 @@ object FormMain: TFormMain
     end
     object ButtonStartStopServer: TButton
       Left = 286
-      Top = 32
+      Top = 16
       Width = 179
       Height = 25
       Caption = 'ButtonStartStopServer'
@@ -142,7 +140,7 @@ object FormMain: TFormMain
       OnClick = ButtonStartStopServerClick
     end
     object ButtonGetChannel: TButton
-      Left = 502
+      Left = 486
       Top = 16
       Width = 107
       Height = 25
@@ -151,8 +149,8 @@ object FormMain: TFormMain
       OnClick = ButtonGetChannelClick
     end
     object ButtonGetChannel2: TButton
-      Left = 502
-      Top = 63
+      Left = 614
+      Top = 15
       Width = 107
       Height = 25
       Caption = 'ButtonGetChannel2'
@@ -160,9 +158,9 @@ object FormMain: TFormMain
       OnClick = ButtonGetChannel2Click
     end
     object Edit4: TEdit
-      Left = 16
-      Top = 3
-      Width = 369
+      Left = 296
+      Top = 47
+      Width = 437
       Height = 23
       TabOrder = 4
       Text = 'Edit4'
@@ -171,8 +169,8 @@ object FormMain: TFormMain
   object PanelChannels: TPanel
     Left = 0
     Top = 0
-    Width = 624
-    Height = 399
+    Width = 753
+    Height = 418
     Caption = 'PanelChannels'
     ShowCaption = False
     TabOrder = 1
@@ -190,26 +188,26 @@ object FormMain: TFormMain
       ParentFont = False
     end
     object Image1: TImage
-      Left = 479
-      Top = 12
+      Left = 542
+      Top = 11
       Width = 105
       Height = 105
     end
     object Image2: TImage
-      Left = 479
+      Left = 542
       Top = 122
       Width = 105
       Height = 105
     end
     object ProgressBarTranslater: TProgressBar
-      Left = 16
-      Top = 304
+      Left = 603
+      Top = 165
       Width = 150
       Height = 17
       TabOrder = 0
     end
     object ButtonBuy: TButton
-      Left = 528
+      Left = 672
       Top = 12
       Width = 81
       Height = 25
@@ -227,34 +225,37 @@ object FormMain: TFormMain
       Enabled = False
       TabOrder = 2
       Text = 'EditStatusConnect'
+      Visible = False
     end
     object Edit1: TEdit
-      Left = 13
-      Top = 233
+      Left = 623
+      Top = 219
       Width = 523
       Height = 23
       TabOrder = 3
       Text = 'Edit1'
     end
-    object Edit2: TEdit
-      Left = 13
-      Top = 262
+    object EdRefresh_token: TEdit
+      Left = 623
+      Top = 249
       Width = 523
       Height = 23
       TabOrder = 4
-      Text = 'Edit2'
+      Text = 'EdRefresh_token'
+      Visible = False
     end
-    object Edit3: TEdit
-      Left = 13
-      Top = 291
+    object EdAccess_token: TEdit
+      Left = 623
+      Top = 278
       Width = 523
       Height = 23
       TabOrder = 5
-      Text = 'Edit3'
+      Text = 'EdAccess_token'
+      Visible = False
     end
     object Memo1: TMemo
-      Left = 13
-      Top = 320
+      Left = 623
+      Top = 307
       Width = 561
       Height = 65
       Lines.Strings = (
@@ -370,56 +371,52 @@ object FormMain: TFormMain
         '}')
       TabOrder = 6
     end
-    object StringGrid1: TStringGrid
-      Left = 13
-      Top = 43
-      Width = 460
-      Height = 184
-      DefaultRowHeight = 88
-      FixedCols = 0
-      FixedRows = 0
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSelect, goFixedRowDefAlign]
-      ParentShowHint = False
-      ScrollBars = ssVertical
-      ShowHint = False
-      TabOrder = 7
-      OnDrawCell = StringGrid1DrawCell
-    end
     object ButtonLoadChannels: TButton
-      Left = 479
+      Left = 614
       Top = 80
       Width = 139
       Height = 25
       Caption = 'ButtonLoadChannels'
-      TabOrder = 8
+      TabOrder = 7
       OnClick = ButtonLoadChannelsClick
     end
     object Button1: TButton
-      Left = 494
+      Left = 603
       Top = 188
       Width = 130
       Height = 25
       Caption = #1042#1089#1090#1072#1074#1082#1072' '#1073#1083#1086#1073
-      TabOrder = 9
+      TabOrder = 8
       OnClick = Button1Click
     end
     object Button2: TButton
-      Left = 542
-      Top = 248
+      Left = 646
+      Top = 378
       Width = 75
       Height = 25
       Caption = #1042' '#1092#1072#1081#1083
-      TabOrder = 10
+      TabOrder = 9
       OnClick = Button2Click
     end
     object Button3: TButton
-      Left = 479
-      Top = 136
-      Width = 130
+      Left = 614
+      Top = 134
+      Width = 139
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1086#1073#1098#1077#1082#1090#1072
-      TabOrder = 11
+      TabOrder = 10
       OnClick = Button3Click
+    end
+    object ScrollBox1: TScrollBox
+      Left = 13
+      Top = 43
+      Width = 569
+      Height = 358
+      HorzScrollBar.ButtonSize = 10
+      HorzScrollBar.Visible = False
+      VertScrollBar.ButtonSize = 12
+      BorderStyle = bsNone
+      TabOrder = 11
     end
   end
   object IdTCPServer1: TIdTCPServer
