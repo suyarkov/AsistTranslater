@@ -3,7 +3,7 @@ object FormMain: TFormMain
   Top = 0
   Caption = 'AsistTranslater'
   ClientHeight = 502
-  ClientWidth = 663
+  ClientWidth = 772
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,7 +14,7 @@ object FormMain: TFormMain
   object PanelButton: TPanel
     Left = 0
     Top = 405
-    Width = 663
+    Width = 772
     Height = 97
     Align = alBottom
     Color = clCream
@@ -402,6 +402,24 @@ object FormMain: TFormMain
       Caption = #1042#1089#1090#1072#1074#1082#1072' '#1073#1083#1086#1073
       TabOrder = 9
       OnClick = Button1Click
+    end
+    object Button2: TButton
+      Left = 542
+      Top = 248
+      Width = 75
+      Height = 25
+      Caption = #1042' '#1092#1072#1081#1083
+      TabOrder = 10
+      OnClick = Button2Click
+    end
+    object Button3: TButton
+      Left = 479
+      Top = 136
+      Width = 130
+      Height = 25
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1086#1073#1098#1077#1082#1090#1072
+      TabOrder = 11
+      OnClick = Button3Click
     end
   end
   object IdTCPServer1: TIdTCPServer

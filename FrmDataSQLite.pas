@@ -21,12 +21,15 @@ type
   TShortChannel = record
     id_channel: string;
     name_channel: string;
-    img_channel: TBlobType;
+    img_channel: TBlobType;//tfGraphic;//TBlobType;
     refresh_token: string;
     lang: string;
     sel_lang: string;
     deleted: integer;
   end;
+
+Type
+  TShortChannels = Array [1 .. 50] of TShortChannel; // ограничим 50 каналами
 
 type
   TSQLiteModule = class(TDataModule)
@@ -38,10 +41,10 @@ type
   public
     { Public declarations }
     function SelRefreshToken(): tDataSet;
+    function SelInfoChannels(): TShortChannels;
     function InsRefreshToken(pShortChanel: TShortChannel): integer;
-    function LoadAnyImage(pUrl: string): TStringStream; // TPicture;
-    procedure SaveTestImage(pSS3: AnsiString); // TPicture;
-    procedure SaveInBaseImage(pFile: String); // TPicture;
+    function LoadAnyImage(pUrl: string): TStream;
+    procedure SaveTestImage(pSS3: AnsiString);
   end;
 
 var
@@ -86,6 +89,40 @@ begin
   Result := results;
 end;
 
+function TSQLiteModule.SelInfoChannels(): TShortChannels;
+var
+  i: integer;
+  results: tDataSet;
+  Channels: TShortChannels;
+begin
+  try
+    SQLiteModule.SQL.ExecSQL('select * from refresh_token', nil, results);
+  except
+    on E: Exception do
+      showmessage('Exception raised with message: ' + E.Message);
+  end;
+  if not results.IsEmpty then
+  begin
+    results.First;
+    i := 0;
+    while not results.Eof do
+    begin
+      inc(i);
+
+      Channels[i].id_channel := results.FieldByName('id_channel').AsString;
+      Channels[i].name_channel := results.FieldByName('name_channel').AsString;
+      Channels[i].img_channel := TBlobType(results.FieldByName('img_channel'));
+      Channels[i].refresh_token := results.FieldByName('refresh_token').AsString;
+      Channels[i].lang := results.FieldByName('lang').AsString;
+      Channels[i].sel_lang := results.FieldByName('sel_lang').AsString;
+      Channels[i].deleted := results.FieldByName('deleted').AsInteger;
+      results.Next;
+    end;
+  end;
+
+  Result := Channels;
+end;
+
 function TSQLiteModule.InsRefreshToken(pShortChanel: TShortChannel): integer;
 var
   i: integer;
@@ -112,35 +149,7 @@ begin
       showmessage('Exception raised with message: ' + E.Message);
     end;
   end;
-  {
-    ms := TMemoryStream.Create;
-    ms.LoadFromFile('C:\Pictures\l.jpg');
-    if ms <> nil then
-    begin
-    sq := TSQLQuery.Create(nil);
-    sq.SQLConnection := con1;
-    sq.SQL.Text := 'update db1 set picture= :photo ;';
-    sq.Params.ParseSQL(sq.SQL.Text, true);
-    sq.Params.ParamByName('photo').LoadFromStream(ms, ftBlob);
-    sq.ExecSQL();
-    end;
-  }
-  SQLQuery.SQL.Text :=
-    'update refresh_token set img_channel= :photo where id_channel = :id;';
-  // SQLQuery.Params.ParseSQL(sq.SQL.Text, true);
-  SQLQuery.Params[0].Value := pShortChanel.img_channel;
-  SQLQuery.Params[1].Value := pShortChanel.id_channel;
-  SQLQuery.ExecSQL;
-  // SQLQuery.Params.ParamByName('photo').LoadFromStream(ms, ftBlob);
-  {
-    SQLQuery.SQL.Text :=
-    'Insert into IMGBlob (ID,Blob,typ) Values (:ID,:BLOB,:typ)';
-    SQLQuery .. Parameters[0].Value := 1;
-    SQLQuery.Parameters[1].Assign(jp);
-    SQLQuery.Parameters[2].Value := itJPG;
-    SQLQuery.ExecSQL; }
 
-  // SQLiteModule.ClickConnection.Close;
   SQLiteModule.SQL.Commit;
   Result := 1;
 end;
@@ -158,18 +167,15 @@ begin
   }
 end;
 
-function TSQLiteModule.LoadAnyImage(pUrl: string): TStringStream; // TPicture;
+function TSQLiteModule.LoadAnyImage(pUrl: string): TStream; // TPicture;
 var
   AValue, ConstSourceLang, ConstTargetLang: String;
   AResponce: IHTTPResponse;
   FHTTPClient: THTTPClient;
   AAPIUrl: String;
-  j: integer;
   jpegimg: TJPEGImage;
   s: string;
   Ss: TStringStream;
-  St: string;
-  Image1: Timage;
 begin
   begin
     s := StringReplace(pUrl, #13, '', [rfReplaceAll, rfIgnoreCase]);
@@ -180,19 +186,19 @@ begin
     try
       AResponce := FHTTPClient.Get(AAPIUrl);
     except
-      // showmessage('нет подключения');
+      showmessage('нет подключения');
     end;
     if Not Assigned(AResponce) then
     begin
-      // showmessage('Пусто');
+      showmessage('Пусто');
     end;
 
     try
-      jpegimg := TJPEGImage.Create;
-      jpegimg.LoadFromStream(AResponce.ContentStream);
-      jpegimg.SaveToStream(Ss);
+      // jpegimg := TJPEGImage.Create;
+      // jpegimg.LoadFromStream(AResponce.ContentStream);
+      // jpegimg.SaveToStream(Ss);
       // Result.Assign(jpegimg);
-      // Image1.Picture.Assign(jpegimg)
+      // Image2.Picture.Assign(jpegimg);
       // Result.Assign(jpegimg);
       // Ss := TStringStream.Create(st);
       // Image1.Picture.Bitmap.SaveToStream(   (Ss);
@@ -200,106 +206,17 @@ begin
       // showmessage('Не Пусто1');
     end;
   end;
-  Result := Ss;
+  Result := AResponce.ContentStream; // SS
 end;
 
 procedure TSQLiteModule.SaveTestImage(pSS3: AnsiString); // TPicture;
-var
-  AValue, ConstSourceLang, ConstTargetLang: String;
-  AResponce: IHTTPResponse;
-  FHTTPClient: THTTPClient;
-  AAPIUrl: String;
-  j: integer;
-  jpegimg: TJPEGImage;
-  s: string;
-  Ss: TStringStream;
-  St: string;
-  Image1: Timage;
-  jp:TJpegimage;
-  g: TGraphic;
-
 begin
   begin
-    //vS := pSS.DataString;
-    g := TPNGImage.Create;
-    //g.Assign(pSS);
-    //Image1.Picture.Assign(g);
     SQLQuery.SQL.Text :=
-//    'update refresh_token set id_channel= "Проба Update" where id_channel = "UCcD7KQCDJBAJovCngaAdObA";';
-    'update refresh_token set img_channel= :photo where id_channel = "UCcD7KQCDJBAJovCngaAdObA";';
-    // SQLQuery.Params.ParseSQL(sq.SQL.Text, true);
-    //Image1.Create();
-    //SS := TStringStream.Create(S);
-    //g.LoadFromStream(pSS3);
-    //SQLQuery.Params[0].Value := TBlobType(pSS);
-    //SQLQuery.Params[0].Assign(g);
+      'update refresh_token set img_channel= :photo where id_channel = "UCcD7KQCDJBAJovCngaAdObA";';
     SQLQuery.Params[0].AsBlob := pSS3;
-    //SQLQuery.Params.ParamByName('photo').LoadFromStream(pSS, ftBlob);
-    //VaAssign(pSS);
     SQLQuery.ExecSQL;
-
-    // SQLQuery.Params.ParamByName('photo').LoadFromStream(ms, ftBlob);
-    {
-      SQLQuery.SQL.Text :=
-      'Insert into IMGBlob (ID,Blob,typ) Values (:ID,:BLOB,:typ)';
-      SQLQuery .. Parameters[0].Value := 1;
-      SQLQuery.Parameters[1].Assign(jp);
-      SQLQuery.Parameters[2].Value := itJPG;
-      SQLQuery.ExecSQL; }
-
-    // SQLiteModule.ClickConnection.Close;
     SQLiteModule.SQL.Commit;
-
-  end;
-end;
-
-procedure TSQLiteModule.SaveInBaseImage (pFile: String); // TPicture;
-var
-  AValue, ConstSourceLang, ConstTargetLang: String;
-  AResponce: IHTTPResponse;
-  FHTTPClient: THTTPClient;
-  AAPIUrl: String;
-  j: integer;
-  jpegimg: TJPEGImage;
-  s: string;
-  Ss: TStringStream;
-  St: string;
-  Image1: Timage;
-  jp:TJpegimage;
-  g: TGraphic;
-
-  vS: AnsiString;
-begin
-  begin
-    //vS := pSS.DataString;
-    g := TPNGImage.Create;
-    //g.Assign(pSS);
-    //Image1.Picture.Assign(g);
-    SQLQuery.SQL.Text :=
-//    'update refresh_token set id_channel= "Проба Update" where id_channel = "UCcD7KQCDJBAJovCngaAdObA";';
-    'update refresh_token set img_channel= :photo where id_channel = "UCcD7KQCDJBAJovCngaAdObA";';
-    // SQLQuery.Params.ParseSQL(sq.SQL.Text, true);
-    //Image1.Create();
-    SS := TStringStream.Create(S);
-    g.LoadFromStream(SS);
-    //SQLQuery.Params[0].Value := TBlobType(pSS);
-    //SQLQuery.Params[0].AsBlob .Assign(g);
-    //SQLQuery.Params.ParamByName('photo').LoadFromStream(pSS, ftBlob);
-    //VaAssign(pSS);
-    SQLQuery.ExecSQL;
-   //  Query.ParamByName('Pict').AsBlob := S;
-    // SQLQuery.Params.ParamByName('photo').LoadFromStream(ms, ftBlob);
-    {
-      SQLQuery.SQL.Text :=
-      'Insert into IMGBlob (ID,Blob,typ) Values (:ID,:BLOB,:typ)';
-      SQLQuery .. Parameters[0].Value := 1;
-      SQLQuery.Parameters[1].Assign(jp);
-      SQLQuery.Parameters[2].Value := itJPG;
-      SQLQuery.ExecSQL; }
-
-    // SQLiteModule.ClickConnection.Close;
-    SQLiteModule.SQL.Commit;
-
   end;
 end;
 

@@ -45,6 +45,8 @@ type
     Edit4: TEdit;
     Button1: TButton;
     Image2: TImage;
+    Button2: TButton;
+    Button3: TButton;
     procedure ButtonSignInClick(Sender: TObject);
     procedure ButtonStartStopServerClick(Sender: TObject);
     procedure IdTCPServer1Execute(AContext: TIdContext);
@@ -55,8 +57,11 @@ type
     procedure StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
   private
     { Private declarations }
+    ShortChannels: TShortChannels;
   public
     { Public declarations }
   end;
@@ -173,30 +178,130 @@ end;
 procedure TFormMain.Button1Click(Sender: TObject);
 var
   vSS: TStringStream;
-  jpegimg: TJPEGImage;
 
   SS: TStringStream;
   g: TGraphic;
 
   S: AnsiString;
-  vBlob : TBlobType;
+  vBlob: TBlobType;
 begin
   // UCcD7KQCDJBAJovCngaAdObA
-  //vBlob := TBlobType.Create;
+  // vBlob := TBlobType.Create;
   vSS := TStringStream.Create();
-  Image1.Picture.SaveToStream(vSS);
-  //Image1.Picture.SaveToFile('D:\GitClicker\AsistTranslater\temp.png');
+  Image2.Picture.SaveToStream(vSS);
+  // Image1.Picture.SaveToFile('D:\GitClicker\AsistTranslater\temp.png');
   S := vSS.DataString;
   SQLiteModule.SaveTestImage(S);
-  g := TPNGImage.Create;
-  SS := TStringStream.Create(S);
-  //vBlob := TBlobType(vSS.DataString);
-  g.LoadFromStream(SS);
-  Image2.Picture.Assign(g);
-  SS.Free;
+  // g := TPNGImage.Create;
+  // SS := TStringStream.Create(S);
+  // vBlob := TBlobType(vSS.DataString);
+  // g.LoadFromStream(SS);
+  // Image2.Picture.Assign(g);
+  // SS.Free;
   vSS.Free;
-  g.Free;
+  // g.Free;
 
+end;
+
+procedure TFormMain.Button2Click(Sender: TObject);
+var
+  http: TIdHTTP;
+  str: TFileStream;
+begin
+  // Создим класс для закачки
+  http := TIdHTTP.Create(nil);
+  // каталог, куда файл положить
+  ForceDirectories(ExtractFileDir('D:/tete.jpg'));
+  // Поток для сохранения
+  str := TFileStream.Create('D:/tete.jpg', fmCreate);
+  try
+    // Качаем
+    http.Get('https://yt3.ggpht.com/dpKQdRtvoc1BOYxFDooMPWBmQ6rEBJUSo_KBJwBuRZMEXgyDjg8Ixxtqs61y7-xpWS5fIfElLg=s88-c-k-c0x00ffffff-no-rj',
+      str);
+  finally
+    // Нас учили чистить за собой
+    http.Free;
+    str.Free;
+    Image2.Picture.LoadFromFile('D:/tete.jpg');
+  end;
+end;
+
+procedure TFormMain.Button3Click(Sender: TObject);
+var
+  //
+  i: Integer;
+  // results: TDataSet;
+  g: TGraphic;
+  results: TShortChannels;
+
+  vSS: TStringStream;
+  SS: TStringStream;
+
+  S: AnsiString;
+  vBlob: TBlobType;
+  vBlobF: TBlobField;
+
+begin
+
+  // g:=TJpegimage.Create;
+  g := TPNGImage.Create;
+  // g:=TBitmap.Create;
+
+  // очищаю грид
+  for i := 0 to 1000 do
+    StringGrid1.Rows[i].Clear;
+
+  StringGrid1.ColCount := 7;
+  StringGrid1.RowCount := 0;
+  i := 0;
+
+  // загружаю данные из локальной таблицы
+  results := SQLiteModule.SelInfoChannels();
+
+  // разбираю курсор по ячейкам, а хотелось бы сразу объект а не ячейки.
+  for i := 1 to 50 do
+
+  begin
+    if results[i].id_channel <> '' then
+
+    begin
+      StringGrid1.Cells[0, i - 1] := results[i].id_channel;
+      StringGrid1.Cells[1, i - 1] := results[i].name_channel;
+      // StringGrid1.Cells[2, i - 1] := String(results[i].img_channel);
+      // .AsString;
+      vBlob := results[i].img_channel;
+      //vBlobF.;
+      //vBlobF := TBlobField(vBlob);
+      //vSS := TStringStream.Create();
+//        Image2.Picture.SaveToStream(vSS);
+      //vBlobF.SaveToStream(vSS);
+      //S := vSS.DataString;
+      //  SQLiteModule.SaveTestImage(S);
+
+
+      if i = 1 then
+      begin
+        //Image1.Picture.LoadFromStream(vSS);
+      end;
+      // Image1.Picture.
+
+      // g := results[i].img_channel;
+      // SQLQuery.Params[0].AsBlob := pSS3;
+      // это рабочий вариант прямо с поля взять, не из таблицы!!
+      // g.Assign(results[i].img_channel);
+      // Image1.Picture.Assign(g);
+      // g:TGraphic;
+      // Image1.Picture.LoadFromStream(results.FieldByName('img_channel'),ftBlob)
+
+      StringGrid1.Cells[3, i - 1] := results[i].refresh_token;
+      StringGrid1.Cells[4, i - 1] := results[i].lang;
+      StringGrid1.Cells[5, i - 1] := results[i].sel_lang;
+      StringGrid1.Cells[6, i - 1] := IntToStr(results[i].deleted);
+
+      StringGrid1.RowCount := i;
+    end;
+    ShortChannels := results;
+  end;
 end;
 
 procedure TFormMain.ButtonBuyClick(Sender: TObject);
@@ -249,6 +354,14 @@ var
   vImgUrl: string;
   g: TGraphic;
   ssimg: TStringStream;
+  vSS: TStringStream;
+  SS: TStringStream;
+  // S: AnsiString;
+  jpegimg: TJPEGImage;
+  S: string;
+  AAPIUrl: String;
+  FHTTPClient: THTTPClient;
+  AResponce: IHTTPResponse;
 begin
   vObj.Create;
   vObj := TJson.JsonToObject<Tchannel>(Memo1.Text);
@@ -261,8 +374,55 @@ begin
     vImgUrl := vObj.Items[i].snippet.thumbnails.default.URL;
     Edit4.Text := vImgUrl;
     // ssimg := SQLiteModule.LoadAnyImage(vImgUrl);
-    vChannel.img_channel := TBlobType(SQLiteModule.LoadAnyImage(vImgUrl));
-    vChannel.img_channel := TBlobType(ssimg);
+    // vChannel.img_channel := TBlobType(SQLiteModule.LoadAnyImage(vImgUrl));
+    try
+
+      S := StringReplace(Edit4.Text, #13, '', [rfReplaceAll, rfIgnoreCase]);
+      AAPIUrl := StringReplace(S, #10, '', [rfReplaceAll, rfIgnoreCase]);
+      FHTTPClient := THTTPClient.Create;
+      FHTTPClient.UserAgent :=
+        'Mozilla/5.0 (Windows; U; Windows NT 6.1; ru-RU) Gecko/20100625 Firefox/3.6.6';
+      try
+        AResponce := FHTTPClient.Get(AAPIUrl);
+      except
+        showmessage('нет подключения');
+      end;
+      if Not Assigned(AResponce) then
+      begin
+        showmessage('Пусто');
+      end;
+
+      // g := TPNGImage.Create;
+      // SS := TStringStream.Create(S);
+      // showmessage('Пусто 9');
+      // g.LoadFromStream(SQLiteModule.LoadAnyImage(vImgUrl));
+      showmessage('Пусто 10');
+      // Image2.Picture.Assign(g);
+
+      jpegimg := TJPEGImage.Create;
+      // memo1.Text := SQLiteModule.LoadAnyImage(vImgUrl);
+      jpegimg.LoadFromStream(AResponce.ContentStream);
+      showmessage('Пусто 111');
+      Image2.Picture.Assign(jpegimg);
+      showmessage('Пусто 112');
+      // Image2.Picture.LoadFromStream(SQLiteModule.LoadAnyImage(vImgUrl));
+      showmessage('Пусто 11');
+
+      // vSS := SQLiteModule.LoadAnyImage(vImgUrl);
+      // jpegimg := TJPEGImage.Create;
+      // jpegimg.LoadFromStream(AResponce.ContentStream);
+      // jpegimg.SaveToStream(Ss);
+      // Result.Assign(jpegimg);
+      // Image2.Picture.Assign(jpegimg);
+    except
+      showmessage('Пусто 1');
+    end;
+    // vSS := SQLiteModule.LoadAnyImage(vImgUrl);
+    // S := vSS.DataString;
+    // SQLiteModule.SaveTestImage(S);
+
+    // Image2.
+    // vChannel.img_channel := TBlobType(ssimg);
 
     vChannel.refresh_token := Edit2.Text;
     vChannel.lang := vObj.Items[i].snippet.defaultLanguage;
@@ -318,14 +478,19 @@ begin
   // g:=TJpegimage.Create;
   g := TPNGImage.Create;
   // g:=TBitmap.Create;
+
+  // очищаю грид
   for i := 0 to 1000 do
     StringGrid1.Rows[i].Clear;
 
   StringGrid1.ColCount := 7;
   StringGrid1.RowCount := 0;
   i := 0;
+
+  // загружаю данные из локальной таблицы
   results := SQLiteModule.SelRefreshToken();
 
+  // разбираю курсор по ячейкам, а хотелось бы сразу объект а не ячейки.
   if not results.IsEmpty then
   begin
     results.First;
@@ -338,11 +503,11 @@ begin
       StringGrid1.Cells[0, i - 1] := results.FieldByName('id_channel').AsString;
       StringGrid1.Cells[1, i - 1] :=
         results.FieldByName('name_channel').AsString;
-      StringGrid1.Cells[2, i - 1] := results.FieldByName('img_channel')
-        .AsString;
+      // StringGrid1.Cells[2, i - 1] := results.FieldByName('img_channel')
+      // .AsString;
       if i = 1 then
       begin
-        // Image1.Picture.Assign(results.FieldByName('img_channel'));
+        // это рабочий вариант прямо с поля взять, не из таблицы!!
         g.Assign(results.FieldByName('img_channel'));
         Image1.Picture.Assign(g);
         // g:TGraphic;
@@ -418,7 +583,6 @@ var
   PeerIP: string;
 
   msgFromClient: string;
-  vCode: string;
   vPosBegin, vPosEnd: Integer;
   vAccessCode: string;
 
@@ -426,7 +590,6 @@ var
   vPath: string;
   vFullNameFile: string;
   vFileText: TStringList;
-  i: Integer;
 
 begin
 
