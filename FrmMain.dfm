@@ -10,6 +10,8 @@ object FormMain: TFormMain
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OnActivate = FormActivate
+  OnCreate = FormCreate
   TextHeight = 15
   object PanelButton: TPanel
     Left = 0
@@ -20,6 +22,8 @@ object FormMain: TFormMain
     Color = clCream
     ParentBackground = False
     TabOrder = 0
+    ExplicitTop = 420
+    ExplicitWidth = 770
     object ImageSignIn: TImage
       Left = 13
       Top = 16
@@ -137,6 +141,7 @@ object FormMain: TFormMain
       Height = 25
       Caption = 'ButtonStartStopServer'
       TabOrder = 1
+      Visible = False
       OnClick = ButtonStartStopServerClick
     end
     object ButtonGetChannel: TButton
@@ -146,6 +151,7 @@ object FormMain: TFormMain
       Height = 25
       Caption = 'ButtonGetChannel'
       TabOrder = 2
+      Visible = False
       OnClick = ButtonGetChannelClick
     end
     object ButtonGetChannel2: TButton
@@ -155,6 +161,7 @@ object FormMain: TFormMain
       Height = 25
       Caption = 'ButtonGetChannel2'
       TabOrder = 3
+      Visible = False
       OnClick = ButtonGetChannel2Click
     end
     object Edit4: TEdit
@@ -164,6 +171,7 @@ object FormMain: TFormMain
       Height = 23
       TabOrder = 4
       Text = 'Edit4'
+      Visible = False
     end
   end
   object PanelChannels: TPanel
@@ -188,13 +196,13 @@ object FormMain: TFormMain
       ParentFont = False
     end
     object Image1: TImage
-      Left = 542
+      Left = 588
       Top = 11
       Width = 105
       Height = 105
     end
     object Image2: TImage
-      Left = 542
+      Left = 588
       Top = 122
       Width = 105
       Height = 105
@@ -228,33 +236,33 @@ object FormMain: TFormMain
       Visible = False
     end
     object Edit1: TEdit
-      Left = 623
+      Left = 704
       Top = 219
-      Width = 523
+      Width = 442
       Height = 23
       TabOrder = 3
       Text = 'Edit1'
     end
     object EdRefresh_token: TEdit
-      Left = 623
+      Left = 704
       Top = 249
-      Width = 523
+      Width = 442
       Height = 23
       TabOrder = 4
       Text = 'EdRefresh_token'
       Visible = False
     end
     object EdAccess_token: TEdit
-      Left = 623
+      Left = 704
       Top = 278
-      Width = 523
+      Width = 442
       Height = 23
       TabOrder = 5
       Text = 'EdAccess_token'
       Visible = False
     end
     object Memo1: TMemo
-      Left = 623
+      Left = 687
       Top = 307
       Width = 561
       Height = 65
@@ -372,7 +380,7 @@ object FormMain: TFormMain
       TabOrder = 6
     end
     object ButtonLoadChannels: TButton
-      Left = 614
+      Left = 678
       Top = 80
       Width = 139
       Height = 25
@@ -381,7 +389,7 @@ object FormMain: TFormMain
       OnClick = ButtonLoadChannelsClick
     end
     object Button1: TButton
-      Left = 603
+      Left = 672
       Top = 188
       Width = 130
       Height = 25
@@ -394,12 +402,12 @@ object FormMain: TFormMain
       Top = 378
       Width = 75
       Height = 25
-      Caption = #1042' '#1092#1072#1081#1083
+      Caption = #1060#1086#1090#1086' '#1042' '#1092#1072#1081#1083
       TabOrder = 9
       OnClick = Button2Click
     end
     object Button3: TButton
-      Left = 614
+      Left = 672
       Top = 134
       Width = 139
       Height = 25
@@ -417,6 +425,9 @@ object FormMain: TFormMain
       VertScrollBar.ButtonSize = 12
       BorderStyle = bsNone
       TabOrder = 11
+      OnMouseMove = ScrollBox1MouseMove
+      OnMouseWheelDown = ScrollBox1MouseWheelDown
+      OnMouseWheelUp = ScrollBox1MouseWheelUp
     end
   end
   object IdTCPServer1: TIdTCPServer

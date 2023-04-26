@@ -54,11 +54,22 @@ type
     procedure ButtonGetChannel2Click(Sender: TObject);
     procedure ButtonLoadChannelsClick(Sender: TObject);
     procedure ButtonBuyClick(Sender: TObject);
+    procedure DinButtonDeleteChannelClick(Sender: TObject);
+    procedure DinPanelClick(Sender: TObject);
+    procedure DinPanelClickType(Sender: TObject; pType : string);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure DinPanelMouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
+    procedure FormActivate(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure ScrollBox1MouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Integer);
+    procedure ScrollBox1MouseWheelDown(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure ScrollBox1MouseWheelUp(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
   private
     { Private declarations }
     ShortChannels: TShortChannels;
@@ -96,6 +107,17 @@ begin
     // чтобы когда произойдет движенье мышью над формой вернуть его обратно
     lastPanel := panel;
   end;
+end;
+
+procedure TFormMain.FormActivate(Sender: TObject);
+begin
+  // ButtonLoadChannelsClick(Sender);
+  ButtonLoadChannels.OnClick(Sender);
+end;
+
+procedure TFormMain.FormCreate(Sender: TObject);
+begin
+  lastPanel := nil;
 end;
 
 function ParamValue(ParamName, JSONString: string): string;
@@ -200,6 +222,33 @@ begin
 
 end;
 
+procedure TFormMain.DinButtonDeleteChannelClick(Sender: TObject);
+var
+  strQuestionDelete: string;
+begin
+  strQuestionDelete := 'Delete' + TButton(Sender).Name + '?';
+  showmessage(strQuestionDelete);
+end;
+
+procedure TFormMain.DinPanelClickType(Sender: TObject; pType : string);
+var
+  strQuestionDelete: string;
+begin
+  strQuestionDelete := 'Click' + TPanel(Sender).Name + ' ' + pType + '!';
+  showmessage(strQuestionDelete);
+end;
+
+procedure TFormMain.DinPanelClick(Sender: TObject);
+var
+  strQuestionDelete: string;
+begin
+  //strQuestionDelete := 'Click' + TPanel(Sender).Name + '!';
+  strQuestionDelete := 'Click' + TPanel(Sender).Name + '!';
+  //if (Sender as TControl).Parent is TForm then....
+
+  showmessage(strQuestionDelete);
+end;
+
 procedure TFormMain.Button1Click(Sender: TObject);
 var
   vSS: TStringStream;
@@ -242,9 +291,7 @@ end;
 
 procedure TFormMain.Button3Click(Sender: TObject);
 var
-  //
   i: Integer;
-  // results: TDataSet;
   g: TGraphic;
   results: TShortChannels;
 
@@ -275,8 +322,8 @@ begin
     if results[i].id_channel <> '' then
 
     begin
-      //StringGrid1.Cells[0, i - 1] := results[i].id_channel;
-      //StringGrid1.Cells[1, i - 1] := results[i].name_channel;
+      // StringGrid1.Cells[0, i - 1] := results[i].id_channel;
+      // StringGrid1.Cells[1, i - 1] := results[i].name_channel;
       vBlob := results[i].img_channel;
       // vBlobF.;
       // vBlobF := TBlobField(vBlob);
@@ -300,12 +347,12 @@ begin
       // g:TGraphic;
       // Image1.Picture.LoadFromStream(results.FieldByName('img_channel'),ftBlob)
 
-      //StringGrid1.Cells[3, i - 1] := results[i].refresh_token;
-      //StringGrid1.Cells[4, i - 1] := results[i].lang;
-      //StringGrid1.Cells[5, i - 1] := results[i].sel_lang;
-      //StringGrid1.Cells[6, i - 1] := IntToStr(results[i].deleted);
+      // StringGrid1.Cells[3, i - 1] := results[i].refresh_token;
+      // StringGrid1.Cells[4, i - 1] := results[i].lang;
+      // StringGrid1.Cells[5, i - 1] := results[i].sel_lang;
+      // StringGrid1.Cells[6, i - 1] := IntToStr(results[i].deleted);
 
-      //StringGrid1.RowCount := i;
+      // StringGrid1.RowCount := i;
     end;
     ShortChannels := results;
   end;
@@ -377,11 +424,8 @@ begin
   begin
     vChannel.id_channel := vObj.Items[i].id;
     vChannel.name_channel := vObj.Items[i].snippet.title;
-    // vChannel.img_channel
     vImgUrl := vObj.Items[i].snippet.thumbnails.default.URL;
     Edit4.Text := vImgUrl;
-    // ssimg := SQLiteModule.LoadAnyImage(vImgUrl);
-    // vChannel.img_channel := TBlobType(SQLiteModule.LoadAnyImage(vImgUrl));
     try
 
       S := StringReplace(Edit4.Text, #13, '', [rfReplaceAll, rfIgnoreCase]);
@@ -399,17 +443,8 @@ begin
         showmessage('ѕусто');
       end;
 
-      // g := TPNGImage.Create;
-      // SS := TStringStream.Create(S);
-      // showmessage('ѕусто 9');
-      // g.LoadFromStream(SQLiteModule.LoadAnyImage(vImgUrl));
-      // showmessage('ѕусто 10');
-      // Image2.Picture.Assign(g);
-
       jpegimg := TJPEGImage.Create;
-      // memo1.Text := SQLiteModule.LoadAnyImage(vImgUrl);
       jpegimg.LoadFromStream(AResponce.ContentStream);
-      // showmessage('ѕусто 111');
       Image2.Picture.Assign(jpegimg);
       // Image2.Picture.LoadFromStream(SQLiteModule.LoadAnyImage(vImgUrl));
     except
@@ -429,7 +464,6 @@ const
   tokenurl = 'https://accounts.google.com/o/oauth2/token';
   redirect_uri1 = 'http://127.0.0.1:1904';
 var
-  // vOAuth: TOAuth;
   Params: TDictionary<String, String>;
   Response: string;
   Access_token: string;
@@ -437,9 +471,7 @@ var
 
   OAuth2: TOAuth;
   vString: string;
-
 begin
-
   OAuth2 := TOAuth.Create;
   OAuth2.ClientID :=
     '701561007019-tm4gfmequr8ihqbpqeui28rp343lpo8b.apps.googleusercontent.com';
@@ -455,7 +487,6 @@ begin
   Memo1.Text := vString;
   OAuth2.Free;
   ButtonGetChannel2.OnClick(Sender);
-
 end;
 
 procedure TFormMain.ButtonLoadChannelsClick(Sender: TObject);
@@ -466,7 +497,6 @@ var
   g: TGraphic;
   vPos: Integer;
 begin
-
   // g:=TJpegimage.Create;
   g := TPNGImage.Create;
   // g:=TBitmap.Create;
@@ -482,15 +512,6 @@ begin
     results.First;
     while not results.Eof do
     begin
-      // EditStatusConnect.Text := 'result Exists';
-      // EditStatusConnect.Text := 'result Exists ' + IntToStr(StringGrid1.RowCount - 1);
-      //StringGrid1.Cells[0, i - 1] := results.FieldByName('id_channel').AsString;
-{
-      StringGrid1.Cells[3, i - 1] :=
-        results.FieldByName('refresh_token').AsString;
-      StringGrid1.Cells[4, i - 1] := results.FieldByName('lang').AsString;
-      StringGrid1.Cells[5, i - 1] := results.FieldByName('sel_lang').AsString;
-      StringGrid1.Cells[6, i - 1] := results.FieldByName('deleted').AsString;  }
 
       vPos := (i - 1) * 120;
       PanChannels[i] := TMyPanel.Create(ScrollBox1, vPos, i,
@@ -498,11 +519,15 @@ begin
         results.FieldByName('name_channel').AsString,
         results.FieldByName('lang').AsString);
       PanChannels[i].Parent := ScrollBox1;
-      PanChannels[i].ButtonDel.OnClick := Button1Click;
+      PanChannels[i].ButtonDel.OnClick := DinButtonDeleteChannelClick;
       PanChannels[i].OnMouseMove := DinPanelMouseMove;
-        // это рабочий вариант пр€мо с пол€ вз€ть, не из таблицы!!
-      //  g.Assign(results.FieldByName('img_channel'));
-      //  Image1.Picture.Assign(g);
+      PanChannels[i].OnClick := DinPanelClick;//Type (sender, 'TPanel');
+      PanChannels[i].ChImage.OnClick := DinPanelClick;
+      PanChannels[i].ChName.OnClick := DinPanelClick;
+      PanChannels[i].ChLang.OnClick := DinPanelClick;
+      // это рабочий вариант пр€мо с пол€ вз€ть, не из таблицы!!
+      // g.Assign(results.FieldByName('img_channel'));
+      // Image1.Picture.Assign(g);
       inc(i);
       results.Next;
     end;
@@ -562,7 +587,6 @@ var
   vPosBegin, vPosEnd: Integer;
   vAccessCode: string;
 
-  // vProfile: TProfile;
   vPath: string;
   vFullNameFile: string;
   vFileText: TStringList;
@@ -574,7 +598,6 @@ begin
   PeerIP := AContext.Binding.PeerIP;
   PeerPort := AContext.Binding.PeerPort;
 
-  // AContext.Connection.IOHandler.WriteLn('... message sent from server :)');
   if Pos('GET', msgFromClient) > 0 then
   begin
     if Pos('error=', msgFromClient) = 0 then
@@ -660,6 +683,31 @@ begin
   AContext.Connection.IOHandler.CloseGracefully;
   AContext.Connection.Socket.CloseGracefully;
   AContext.Connection.Socket.Close;
+end;
+
+procedure TFormMain.ScrollBox1MouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  if lastPanel <> nil then
+  begin
+    lastPanel.Color := clBtnFace;
+    lastPanel.Font.Color := clBlack;
+    lastPanel := nil;
+  end;
+end;
+
+procedure TFormMain.ScrollBox1MouseWheelDown(Sender: TObject;
+  Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+begin
+  with ScrollBox1.VertScrollBar do
+    Position := Position + Increment;
+end;
+
+procedure TFormMain.ScrollBox1MouseWheelUp(Sender: TObject; Shift: TShiftState;
+  MousePos: TPoint; var Handled: Boolean);
+begin
+  with ScrollBox1.VertScrollBar do
+    Position := Position - Increment;
 end;
 
 end.

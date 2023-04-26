@@ -42,6 +42,7 @@ constructor TMyPanel.Create(AOwner: TComponent;  pPos, pN: integer; pChId, pChNa
 begin
   Create(AOwner);
   Self.Top := 8 + pPos;
+  //Self.Name := 'P' + IntToStr(pN);
 
   ChId := TLabel.Create(Self);
   with ChId do
@@ -59,6 +60,7 @@ begin
     name := 'D' + IntToStr(pN);
     Left := 500;
     Top := 10;
+    Width := 60;
     Tag := 0;
     Visible := True;
   end;
