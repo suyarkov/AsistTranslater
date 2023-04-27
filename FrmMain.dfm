@@ -184,7 +184,7 @@ object FormMain: TFormMain
     Left = 40
     Top = 0
     Width = 713
-    Height = 418
+    Height = 409
     Caption = 'PanelChannels'
     ShowCaption = False
     TabOrder = 1
@@ -268,9 +268,9 @@ object FormMain: TFormMain
       Visible = False
     end
     object Memo1: TMemo
-      Left = 687
+      Left = 16
       Top = 307
-      Width = 561
+      Width = 692
       Height = 65
       Lines.Strings = (
         '{'
@@ -425,7 +425,7 @@ object FormMain: TFormMain
       Left = 13
       Top = 43
       Width = 569
-      Height = 358
+      Height = 258
       HorzScrollBar.ButtonSize = 10
       HorzScrollBar.Visible = False
       VertScrollBar.ButtonSize = 12

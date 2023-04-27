@@ -15,10 +15,12 @@ type
     ChLang: TLabel;
     ButtonDel: TButton;
     chId  : TLabel;
+    chToken  : TLabel;
   public
     constructor Create(AOwner: TComponent); overload; override;
     // constructor Create(AOwner: TComponent); overload; override;
-    constructor Create(AOwner: TComponent; pPos, pN: integer; pChId, pChName, pChLang : string); reintroduce;
+    constructor Create(AOwner: TComponent; pPos, pN: integer;
+                pChId, pChToken, pChName, pChLang : string); reintroduce;
       overload; virtual;
   end;
 
@@ -38,7 +40,8 @@ begin
   //Top := 8;
 end;
 
-constructor TMyPanel.Create(AOwner: TComponent;  pPos, pN: integer; pChId, pChName, pChLang : string);
+constructor TMyPanel.Create(AOwner: TComponent;  pPos, pN: integer;
+      pChId, pChToken, pChName, pChLang : string);
 begin
   Create(AOwner);
   Self.Top := 8 + pPos;
@@ -50,6 +53,15 @@ begin
   begin
     Parent := Self;
     Caption := pChId;
+    Visible := false;
+    tag :=  pN;
+  end;
+
+  chToken := TLabel.Create(Self);
+  with chToken do
+  begin
+    Parent := Self;
+    Caption := pChToken;
     Visible := false;
     tag :=  pN;
   end;

@@ -244,16 +244,115 @@ end;
 
 
 procedure TFormMain.DinPanelClick(Sender: TObject);
+const
+  tokenurl = 'https://accounts.google.com/o/oauth2/token';
+  redirect_uri1 = 'http://127.0.0.1:1904';
 var
+  Params: TDictionary<String, String>;
+  Response: string;
+  Access_token: string;
+  refresh_token: string;
+
+  OAuth2: TOAuth;
+  vString: string;
+
   strQuestionDelete, vIdChannel, vNameChannel: string;
   vNPanel : integer;
+  vToken : string;
+
+  vObj: Tchannel;
+  res, i: Integer;
+  urlget: string;
+  AJsonString: string;
+//  vChannel: TShortChannel;
+  vImgUrl: string;
+  g: TGraphic;
+  ssimg: TStringStream;
+  vSS: TStringStream;
+  SS: TStringStream;
+  // S: AnsiString;
+  jpegimg: TJPEGImage;
+  S: string;
+  AAPIUrl: String;
+  FHTTPClient: THTTPClient;
+  AResponce: IHTTPResponse;
+
 begin
   vNPanel :=   TButton(Sender).Tag;
   vIdChannel := PanChannels[vNPanel].chId.Caption;
+  vToken := PanChannels[vNPanel].chToken.Caption;
   vNameChannel := PanChannels[vNPanel].chName.Caption;
   strQuestionDelete := 'Click ' + vNameChannel + ' !';
 
   showmessage(strQuestionDelete);
+
+  // запрос видео
+
+  OAuth2 := TOAuth.Create;
+  OAuth2.ClientID :=
+    '701561007019-tm4gfmequr8ihqbpqeui28rp343lpo8b.apps.googleusercontent.com';
+  OAuth2.ClientSecret := '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';
+//  OAuth2.ResponseCode := Edit1.Text;
+  showmessage(vToken);
+  OAuth2.refresh_token := vToken;
+   {
+  Access_token := OAuth2.GetAccessToken;
+  refresh_token := OAuth2.refresh_token;
+  EdRefresh_token.Text := refresh_token;
+  EdAccess_token.Text := Access_token;
+  }
+  // подробней о канале
+ // пока не нужно vString := OAuth2.MyChannels;
+  // о видео
+  vString :=  OAuth2.MyVideos(vIdChannel); // , NextToken: string = '' -- xfcnm cktle.ofz
+  Memo1.Text := vString;
+  OAuth2.Free;
+  // разбор XML
+
+  vObj.Create;
+  vObj := TJson.JsonToObject<Tchannel>(Memo1.Text);
+
+  for i := 0 to Length(vObj.Items) - 1 do
+  begin
+    vChannel.id_channel := vObj.Items[i].id;
+    vChannel.name_channel := vObj.Items[i].snippet.title;
+    vImgUrl := vObj.Items[i].snippet.thumbnails.default.URL;
+    Edit4.Text := vImgUrl;
+    try
+
+      S := StringReplace(Edit4.Text, #13, '', [rfReplaceAll, rfIgnoreCase]);
+      AAPIUrl := StringReplace(S, #10, '', [rfReplaceAll, rfIgnoreCase]);
+      FHTTPClient := THTTPClient.Create;
+      FHTTPClient.UserAgent :=
+        'Mozilla/5.0 (Windows; U; Windows NT 6.1; ru-RU) Gecko/20100625 Firefox/3.6.6';
+      try
+        AResponce := FHTTPClient.Get(AAPIUrl);
+      except
+        showmessage('нет подключения');
+      end;
+      if Not Assigned(AResponce) then
+      begin
+        showmessage('Пусто');
+      end;
+
+      jpegimg := TJPEGImage.Create;
+      jpegimg.LoadFromStream(AResponce.ContentStream);
+      Image2.Picture.Assign(jpegimg);
+      // Image2.Picture.LoadFromStream(SQLiteModule.LoadAnyImage(vImgUrl));
+    except
+    end;
+
+    vChannel.refresh_token := EdRefresh_token.Text;
+    vChannel.lang := vObj.Items[i].snippet.defaultLanguage;
+    // vChannel.sel_lang := vObj.;
+    vChannel.deleted := 0;
+    res := SQLiteModule.InsRefreshToken(vChannel);
+  end;
+
+//  ButtonGetChannel2.OnClick(Sender);
+
+  // отображение видео
+//  RefreshCannelsClick(FormMain);
 end;
 
 procedure TFormMain.Button1Click(Sender: TObject);
@@ -524,6 +623,7 @@ begin
       vPos := (i - 1) * 120;
       PanChannels[i] := TMyPanel.Create(ScrollBox1, vPos, i,
         results.FieldByName('id_channel').AsString,
+        results.FieldByName('refresh_token').AsString,
         results.FieldByName('name_channel').AsString,
         results.FieldByName('lang').AsString);
       PanChannels[i].Parent := ScrollBox1;

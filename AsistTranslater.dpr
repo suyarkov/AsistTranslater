@@ -10,7 +10,6 @@ uses
   Classes.shearche.id in 'Classes.shearche.id.pas',
   Classes.shearche.image in 'Classes.shearche.image.pas',
   Classes.shearche.item in 'Classes.shearche.item.pas',
-  Classes.shearche.items in 'Classes.shearche.items.pas',
   Classes.shearche.pageInfo in 'Classes.shearche.pageInfo.pas',
   Classes.shearche in 'Classes.shearche.pas',
   Classes.shearche.snippet in 'Classes.shearche.snippet.pas',
@@ -19,10 +18,13 @@ uses
   Classes.channel.snippet in 'Classes.channel.snippet.pas',
   Classes.channel.item in 'Classes.channel.item.pas',
   Classes.channel.statistics in 'Classes.channel.statistics.pas',
-  Classes.channel.items in 'Classes.channel.items.pas',
   Classes.channel in 'Classes.channel.pas',
   ChannelPanel in 'ChannelPanel.pas',
-  Unit1 in 'Unit1.pas' {Form1};
+  Unit1 in 'Unit1.pas' {Form1},
+  Classes.video in 'Classes.video.pas',
+  Classes.video.thumbnails in 'Classes.video.thumbnails.pas',
+  Classes.video.snippet in 'Classes.video.snippet.pas',
+  Classes.video.item in 'Classes.video.item.pas';
 
 {$R *.res}
 

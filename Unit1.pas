@@ -51,7 +51,9 @@ var
   vPos: Integer;
 begin
   vPos := (i - 1) * 120;
-  PanChannels[i] := TMyPanel.Create(ScrollBox1, vPos, i, 'dd' + IntToStr(i), 'MyName' + IntToStr(i),
+  PanChannels[i] := TMyPanel.Create(ScrollBox1, vPos, i, 'dd' + IntToStr(i),
+  'MyToken' + IntToStr(i),
+  'MyName' + IntToStr(i),
     'Eng lkdj');
   PanChannels[i].Parent := ScrollBox1;
   PanChannels[i].ButtonDel.OnClick := Button1Click;

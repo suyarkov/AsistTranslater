@@ -117,7 +117,6 @@
         <DCCReference Include="Classes.shearche.id.pas"/>
         <DCCReference Include="Classes.shearche.image.pas"/>
         <DCCReference Include="Classes.shearche.item.pas"/>
-        <DCCReference Include="Classes.shearche.items.pas"/>
         <DCCReference Include="Classes.shearche.pageInfo.pas"/>
         <DCCReference Include="Classes.shearche.pas"/>
         <DCCReference Include="Classes.shearche.snippet.pas"/>
@@ -126,13 +125,16 @@
         <DCCReference Include="Classes.channel.snippet.pas"/>
         <DCCReference Include="Classes.channel.item.pas"/>
         <DCCReference Include="Classes.channel.statistics.pas"/>
-        <DCCReference Include="Classes.channel.items.pas"/>
         <DCCReference Include="Classes.channel.pas"/>
         <DCCReference Include="ChannelPanel.pas"/>
         <DCCReference Include="Unit1.pas">
             <Form>Form1</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Classes.video.pas"/>
+        <DCCReference Include="Classes.video.thumbnails.pas"/>
+        <DCCReference Include="Classes.video.snippet.pas"/>
+        <DCCReference Include="Classes.video.item.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

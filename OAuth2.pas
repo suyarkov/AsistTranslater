@@ -42,10 +42,10 @@ type
     function Language: string;
     function GetTokenInfo: string;
 
-    function VideoInfo(AVideoID: string): string;
+    function VideoInfo(AVideoID: string): string;   // об одном видео
     function VideoUpdate(JSON: string): string;
-    function MyVideos(AChannelID: string; NextToken: string = ''): string;
-    function MyChannels: string;
+    function MyVideos(AChannelID: string; NextToken: string = ''): string; // данные о всех виде
+    function MyChannels: string;  // данные о канале
     function AccessURL: string;        // урл подключения
     function GetAccessToken: string;   // получить соединительный токен подключения
     function RefreshToken: string;     // постоянный ключ
