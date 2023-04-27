@@ -45,6 +45,7 @@ type
     function InsRefreshToken(pShortChanel: TShortChannel): integer;
     function LoadAnyImage(pUrl: string): TStream;
     procedure SaveTestImage(pSS3: AnsiString);
+    procedure DelChannel(pId: String);
   end;
 
 var
@@ -62,7 +63,7 @@ var
   Channel: Array [1 .. 1000] of TShortChannel;
 begin
   try
-    SQLiteModule.SQL.ExecSQL('select * from refresh_token', nil, results);
+    SQLiteModule.SQL.ExecSQL('select * from refresh_token where deleted = 0', nil, results);
   except
     on E: Exception do
       showmessage('Exception raised with message: ' + E.Message);
@@ -135,7 +136,7 @@ begin
     SQLiteModule.SQL.ExecSQL
       ('insert into refresh_token ( id_channel,name_channel,' +
       'img_channel,refresh_token,lang, sel_lang, deleted )' +
-      'values(:id_channel, :name_channel,:img_channel,:refresh_token,:lang,:sel_lang,:deleted )',
+      'values(:id_channel, :name_channel,:img_channel,:refresh_token,:lang,:sel_lang,:deleted)',
       [pShortChanel.id_channel, pShortChanel.name_channel,
       pShortChanel.img_channel, pShortChanel.refresh_token, pShortChanel.lang,
       pShortChanel.sel_lang, pShortChanel.deleted]);
@@ -215,6 +216,17 @@ begin
     SQLQuery.SQL.Text :=
       'update refresh_token set img_channel= :photo where id_channel = "UCcD7KQCDJBAJovCngaAdObA";';
     SQLQuery.Params[0].AsBlob := pSS3;
+    SQLQuery.ExecSQL;
+    SQLiteModule.SQL.Commit;
+  end;
+end;
+
+procedure TSQLiteModule.DelChannel(pId: String);
+begin
+  begin
+    SQLQuery.SQL.Text :=
+      'update refresh_token set deleted = 1 where id_channel = :pId;';
+    SQLQuery.Params[0].AsString := pId;
     SQLQuery.ExecSQL;
     SQLiteModule.SQL.Commit;
   end;

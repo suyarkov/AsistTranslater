@@ -43,6 +43,7 @@ begin
   Create(AOwner);
   Self.Top := 8 + pPos;
   //Self.Name := 'P' + IntToStr(pN);
+  Self.tag :=  pN;
 
   ChId := TLabel.Create(Self);
   with ChId do
@@ -50,6 +51,7 @@ begin
     Parent := Self;
     Caption := pChId;
     Visible := false;
+    tag :=  pN;
   end;
 
   ButtonDel := TButton.Create(Self);
@@ -61,8 +63,8 @@ begin
     Left := 500;
     Top := 10;
     Width := 60;
-    Tag := 0;
     Visible := True;
+    Tag :=  pN;
   end;
 
   ChName := TLabel.Create(Self);
@@ -70,13 +72,14 @@ begin
   begin
     Parent := Self;
     Caption := pChName;
+    Name := 'N' + IntToStr(pN);
     Width := 449;
     Top:=  25;
     Height :=  21;
     left := 120;
     Font.Size := 12;
     Font.Style := [fsBold];
-    Tag := 0;
+    Tag :=  pN;
     Visible := True;
   end;
 
@@ -85,12 +88,13 @@ begin
   begin
     Parent := Self;
     Caption := pChLang;
+    Name := 'L' + IntToStr(pN);
     Height := 17;
     Left := 120;
     Top := 64;
     Width := 449;
     Font.Size := 10;
-    Tag := 0;
+    Tag :=  pN;
     Visible := True;
   end;
 
@@ -102,7 +106,7 @@ begin
     Left := 8;
     Top := 8;
     Width := 88;
-    Tag := 0;
+    Tag :=  pN;
     ChImage.Picture.LoadFromFile('d:/tete.jpg');
     Visible := True;
   end;

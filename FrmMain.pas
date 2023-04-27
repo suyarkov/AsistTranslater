@@ -47,6 +47,8 @@ type
     Button2: TButton;
     Button3: TButton;
     ScrollBox1: TScrollBox;
+    RefreshCannels: TButton;
+    ButtEnd: TButton;
     procedure ButtonSignInClick(Sender: TObject);
     procedure ButtonStartStopServerClick(Sender: TObject);
     procedure IdTCPServer1Execute(AContext: TIdContext);
@@ -56,7 +58,6 @@ type
     procedure ButtonBuyClick(Sender: TObject);
     procedure DinButtonDeleteChannelClick(Sender: TObject);
     procedure DinPanelClick(Sender: TObject);
-    procedure DinPanelClickType(Sender: TObject; pType : string);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -70,6 +71,7 @@ type
       MousePos: TPoint; var Handled: Boolean);
     procedure ScrollBox1MouseWheelUp(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; var Handled: Boolean);
+    procedure RefreshCannelsClick(Sender: TObject);
   private
     { Private declarations }
     ShortChannels: TShortChannels;
@@ -224,27 +226,32 @@ end;
 
 procedure TFormMain.DinButtonDeleteChannelClick(Sender: TObject);
 var
-  strQuestionDelete: string;
+  strQuestionDelete, vIdChannel, vNameChannel: string;
+  vNPanel : integer;
 begin
-  strQuestionDelete := 'Delete' + TButton(Sender).Name + '?';
-  showmessage(strQuestionDelete);
+  vNPanel :=   TButton(Sender).Tag;
+  vIdChannel := PanChannels[vNPanel].chId.Caption;
+  vNameChannel := PanChannels[vNPanel].chName.Caption;
+  strQuestionDelete := 'Delete ' + vNameChannel  + ' ?';
+  if MessageDlg(strQuestionDelete,
+  mtConfirmation, [mbYes, mbNo], 0) = mrYes
+  then
+  begin
+  SQLiteModule.DelChannel(vIdChannel);
+  RefreshCannelsClick(FormMain);
+  end;
 end;
 
-procedure TFormMain.DinPanelClickType(Sender: TObject; pType : string);
-var
-  strQuestionDelete: string;
-begin
-  strQuestionDelete := 'Click' + TPanel(Sender).Name + ' ' + pType + '!';
-  showmessage(strQuestionDelete);
-end;
 
 procedure TFormMain.DinPanelClick(Sender: TObject);
 var
-  strQuestionDelete: string;
+  strQuestionDelete, vIdChannel, vNameChannel: string;
+  vNPanel : integer;
 begin
-  //strQuestionDelete := 'Click' + TPanel(Sender).Name + '!';
-  strQuestionDelete := 'Click' + TPanel(Sender).Name + '!';
-  //if (Sender as TControl).Parent is TForm then....
+  vNPanel :=   TButton(Sender).Tag;
+  vIdChannel := PanChannels[vNPanel].chId.Caption;
+  vNameChannel := PanChannels[vNPanel].chName.Caption;
+  strQuestionDelete := 'Click ' + vNameChannel + ' !';
 
   showmessage(strQuestionDelete);
 end;
@@ -401,7 +408,7 @@ var
   vString: string;
   OAuth2: TOAuth;
   vObj: Tchannel;
-  i: Integer;
+  res, i: Integer;
   urlget: string;
   AJsonString: string;
   vChannel: TShortChannel;
@@ -454,9 +461,9 @@ begin
     vChannel.lang := vObj.Items[i].snippet.defaultLanguage;
     // vChannel.sel_lang := vObj.;
     vChannel.deleted := 0;
+    res := SQLiteModule.InsRefreshToken(vChannel);
   end;
 
-  i := SQLiteModule.InsRefreshToken(vChannel);
 end;
 
 procedure TFormMain.ButtonGetChannelClick(Sender: TObject);
@@ -487,6 +494,7 @@ begin
   Memo1.Text := vString;
   OAuth2.Free;
   ButtonGetChannel2.OnClick(Sender);
+  RefreshCannelsClick(FormMain);
 end;
 
 procedure TFormMain.ButtonLoadChannelsClick(Sender: TObject);
@@ -560,7 +568,10 @@ begin
   if IdTCPServer1.Active = false then
   begin
     IdTCPServer1.Bindings.Add.Port := 1904;
+    IdTCPServer1.Active := true;
+    showmessage('включил сервер');
   end;
+  {
   if IdTCPServer1.Active then
   begin
     IdTCPServer1.Active := false;
@@ -572,7 +583,7 @@ begin
     IdTCPServer1.Active := true;
     showmessage('включил сервер');
 
-  end;
+  end;}
 end;
 
 procedure TFormMain.IdTCPServer1Execute(AContext: TIdContext);
@@ -646,6 +657,7 @@ begin
 
       AContext.Connection.IOHandler.write('</html>');
       AContext.Connection.IOHandler.WriteLn;
+      ButtonGetChannel.OnClick(FormMain);
     end
     else
     begin
@@ -683,6 +695,20 @@ begin
   AContext.Connection.IOHandler.CloseGracefully;
   AContext.Connection.Socket.CloseGracefully;
   AContext.Connection.Socket.Close;
+end;
+
+procedure TFormMain.RefreshCannelsClick(Sender: TObject);
+var i : integer;
+begin
+  try
+    for i := 1 to 20 do
+      PanChannels[i].Free;
+  finally
+    lastPanel:= nil;
+    ButtonLoadChannelsClick(sender);
+  end;
+
+
 end;
 
 procedure TFormMain.ScrollBox1MouseMove(Sender: TObject; Shift: TShiftState;

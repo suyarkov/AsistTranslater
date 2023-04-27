@@ -141,7 +141,6 @@ object FormMain: TFormMain
       Height = 25
       Caption = 'ButtonStartStopServer'
       TabOrder = 1
-      Visible = False
       OnClick = ButtonStartStopServerClick
     end
     object ButtonGetChannel: TButton
@@ -151,7 +150,6 @@ object FormMain: TFormMain
       Height = 25
       Caption = 'ButtonGetChannel'
       TabOrder = 2
-      Visible = False
       OnClick = ButtonGetChannelClick
     end
     object ButtonGetChannel2: TButton
@@ -161,7 +159,6 @@ object FormMain: TFormMain
       Height = 25
       Caption = 'ButtonGetChannel2'
       TabOrder = 3
-      Visible = False
       OnClick = ButtonGetChannel2Click
     end
     object Edit4: TEdit
@@ -173,11 +170,20 @@ object FormMain: TFormMain
       Text = 'Edit4'
       Visible = False
     end
+    object RefreshCannels: TButton
+      Left = 232
+      Top = 16
+      Width = 75
+      Height = 25
+      Caption = 'RefreshCannels'
+      TabOrder = 5
+      OnClick = RefreshCannelsClick
+    end
   end
   object PanelChannels: TPanel
-    Left = 0
+    Left = 40
     Top = 0
-    Width = 753
+    Width = 713
     Height = 418
     Caption = 'PanelChannels'
     ShowCaption = False
@@ -424,11 +430,27 @@ object FormMain: TFormMain
       HorzScrollBar.Visible = False
       VertScrollBar.ButtonSize = 12
       BorderStyle = bsNone
+      ParentShowHint = False
+      ShowHint = False
       TabOrder = 11
       OnMouseMove = ScrollBox1MouseMove
       OnMouseWheelDown = ScrollBox1MouseWheelDown
       OnMouseWheelUp = ScrollBox1MouseWheelUp
     end
+  end
+  object ButtEnd: TButton
+    Left = 0
+    Top = 8
+    Width = 34
+    Height = 25
+    Caption = '<'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clRed
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 2
   end
   object IdTCPServer1: TIdTCPServer
     Bindings = <>
