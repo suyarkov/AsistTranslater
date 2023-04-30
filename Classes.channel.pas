@@ -2,24 +2,24 @@ unit Classes.channel;
 
 interface
 
-uses Classes.shearche.pageInfo, Classes.channel.item;
+uses Classes.shearche.pageInfo, Classes.channel.item, Classes.channel.items;
 
 type
   Tchannel = class
-  type Titems = array of Tchannel_item;
+  type TChItems = array of Tchannel_item;
   private
     Fkind: string;
     Fetag: string;
     FnextPageToken: string;
     FpageInfo : Tshearche_pageInfo;
-    Fitems: Titems;
+    Fitems: TChItems;
 
   public
     property kind: string read Fkind write Fkind;
     property etag: string read Fetag write Fetag;
     property nextPageToken: string read FnextPageToken write FnextPageToken;
     property pageInfo: Tshearche_pageInfo read FpageInfo write FpageInfo;
-    property items: Titems read Fitems write Fitems;
+    property items: TChItems read Fitems write Fitems;
   end;
 
 implementation

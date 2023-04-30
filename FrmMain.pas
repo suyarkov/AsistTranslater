@@ -267,7 +267,8 @@ var
   vNPanel : integer;
   vToken : string;
 
-  vObj: Tvideo;
+//  vObj: Tvideo;
+  vObjVideo: Tchannel;
   res, i: Integer;
   urlget: string;
   AJsonString: string;
@@ -289,6 +290,7 @@ var
 
 begin
   //vPosX
+  vObjVideo.Create;
   vNPanel :=   TButton(Sender).Tag;
   vIdChannel := PanChannels[vNPanel].chId.Caption;
   vToken := PanChannels[vNPanel].chToken.Caption;
@@ -321,8 +323,8 @@ begin
   OAuth2.Free;
   //PanelChannels.Visible := false;
   // разбор XML
-  vObj.Create;
-  vObj := TJson.JsonToObject<Tvideo>(vString);
+//  vObj.Create;
+//  vObj := TJson.JsonToObject<Tvideo>(vString);
 {
   for i := 0 to Length(vObj.Items) - 1 do
   begin
@@ -348,9 +350,14 @@ begin
 end;
 
 procedure TFormMain.ButtEndClick(Sender: TObject);
+var
+   vObj: Tchannel;
 begin
-  PanelVideos.Visible := false;
-  PanelChannels.Visible := true;
+{  PanelVideos.Visible := false;
+  PanelChannels.Visible := true;}
+  vObj.Create;
+  //vObj := TJson.JsonToObject<Tchannel>(Memo1.Text);
+  //vObj.Free;
 end;
 
 procedure TFormMain.Button1Click(Sender: TObject);
@@ -398,13 +405,7 @@ var
   i: Integer;
   g: TGraphic;
   results: TShortChannels;
-
-  vSS: TStringStream;
-  SS: TStringStream;
-
-  S: AnsiString;
   vBlob: TBlobType;
-  vBlobF: TBlobField;
 
 begin
 
@@ -502,18 +503,11 @@ end;
 
 procedure TFormMain.ButtonGetChannel2Click(Sender: TObject);
 var
-  vString: string;
-  OAuth2: TOAuth;
   vObj: Tchannel;
   res, i: Integer;
   urlget: string;
-  AJsonString: string;
   vChannel: TShortChannel;
   vImgUrl: string;
-  g: TGraphic;
-  ssimg: TStringStream;
-  vSS: TStringStream;
-  SS: TStringStream;
   // S: AnsiString;
   jpegimg: TJPEGImage;
   S: string;
@@ -568,8 +562,6 @@ const
   tokenurl = 'https://accounts.google.com/o/oauth2/token';
   redirect_uri1 = 'http://127.0.0.1:1904';
 var
-  Params: TDictionary<String, String>;
-  Response: string;
   Access_token: string;
   refresh_token: string;
 
