@@ -24,7 +24,8 @@ uses
   Classes.video in 'Classes.video.pas',
   Classes.video.thumbnails in 'Classes.video.thumbnails.pas',
   Classes.video.snippet in 'Classes.video.snippet.pas',
-  Classes.video.item in 'Classes.video.item.pas';
+  Classes.video.item in 'Classes.video.item.pas',
+  VideoPanel in 'VideoPanel.pas';
 
 {$R *.res}
 

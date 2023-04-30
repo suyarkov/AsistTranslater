@@ -5,7 +5,7 @@ interface
 uses Classes.shearche.pageInfo, Classes.video.item;
 
 type
-  Tchannel = class
+  Tvideo = class
   type Titems = array of Tvideo_item;
   private
     Fkind: string;

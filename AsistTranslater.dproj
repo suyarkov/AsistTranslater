@@ -135,6 +135,7 @@
         <DCCReference Include="Classes.video.thumbnails.pas"/>
         <DCCReference Include="Classes.video.snippet.pas"/>
         <DCCReference Include="Classes.video.item.pas"/>
+        <DCCReference Include="VideoPanel.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

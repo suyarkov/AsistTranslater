@@ -181,8 +181,8 @@ object FormMain: TFormMain
     end
   end
   object PanelChannels: TPanel
-    Left = 40
-    Top = 0
+    Left = 614
+    Top = 8
     Width = 713
     Height = 409
     Caption = 'PanelChannels'
@@ -242,26 +242,26 @@ object FormMain: TFormMain
       Visible = False
     end
     object Edit1: TEdit
-      Left = 704
+      Left = 680
       Top = 219
-      Width = 442
+      Width = 466
       Height = 23
       TabOrder = 3
       Text = 'Edit1'
     end
     object EdRefresh_token: TEdit
-      Left = 704
+      Left = 672
       Top = 249
-      Width = 442
+      Width = 474
       Height = 23
       TabOrder = 4
       Text = 'EdRefresh_token'
       Visible = False
     end
     object EdAccess_token: TEdit
-      Left = 704
+      Left = 680
       Top = 278
-      Width = 442
+      Width = 466
       Height = 23
       TabOrder = 5
       Text = 'EdAccess_token'
@@ -451,6 +451,22 @@ object FormMain: TFormMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
+    OnClick = ButtEndClick
+  end
+  object PanelVideos: TPanel
+    Left = 40
+    Top = 8
+    Width = 601
+    Height = 401
+    TabOrder = 3
+    Visible = False
+    object ScrollBoxVideo: TScrollBox
+      Left = 8
+      Top = 8
+      Width = 569
+      Height = 385
+      TabOrder = 0
+    end
   end
   object IdTCPServer1: TIdTCPServer
     Bindings = <>

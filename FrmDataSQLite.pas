@@ -26,6 +26,20 @@ type
     lang: string;
     sel_lang: string;
     deleted: integer;
+    viewCount: integer;
+    subscriberCount: integer;
+    videoCount:  integer;
+  end;
+
+type
+  TrVideo = record
+    videoId: string;
+    channelId: string;
+    title: string;
+    description: string; //5000?
+    urlDefault: string;
+    publishedAt: TDateTime;//"2023-04-08T17:37:31Z"
+    publishTime: TDateTime;//"2023-04-08T17:37:31Z"
   end;
 
 Type

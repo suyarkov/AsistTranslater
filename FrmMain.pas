@@ -18,8 +18,8 @@ uses
   System.ImageList, Vcl.ImgList,
   FrmDataSQLite, Vcl.DBCtrls,
   FireDAC.Comp.DataSet, Data.FMTBcd, Data.DB, Data.SqlExpr, Vcl.Menus,
-  Classes.channel, ChannelPanel,
-  REST.JSON, PNGImage;
+  Classes.channel, ChannelPanel, Classes.video,
+  REST.JSON, PNGImage, VideoPanel;
 
 type
   TFormMain = class(TForm)
@@ -49,6 +49,8 @@ type
     ScrollBox1: TScrollBox;
     RefreshCannels: TButton;
     ButtEnd: TButton;
+    PanelVideos: TPanel;
+    ScrollBoxVideo: TScrollBox;
     procedure ButtonSignInClick(Sender: TObject);
     procedure ButtonStartStopServerClick(Sender: TObject);
     procedure IdTCPServer1Execute(AContext: TIdContext);
@@ -72,6 +74,7 @@ type
     procedure ScrollBox1MouseWheelUp(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; var Handled: Boolean);
     procedure RefreshCannelsClick(Sender: TObject);
+    procedure ButtEndClick(Sender: TObject);
   private
     { Private declarations }
     ShortChannels: TShortChannels;
@@ -82,6 +85,7 @@ type
 var
   FormMain: TFormMain;
   PanChannels: array [1 .. 20] of TMyPanel;
+  PanVideos: array [1 .. 50] of TMyVideoPanel;
   lastPanel: TPanel;
 
 implementation
@@ -120,6 +124,9 @@ end;
 procedure TFormMain.FormCreate(Sender: TObject);
 begin
   lastPanel := nil;
+  FormMain.PanelChannels.Left := 40;
+  FormMain.PanelChannels.Top := 0;
+  FormMain.PanelChannels.Visible := true;
 end;
 
 function ParamValue(ParamName, JSONString: string): string;
@@ -260,24 +267,28 @@ var
   vNPanel : integer;
   vToken : string;
 
-  vObj: Tchannel;
+  vObj: Tvideo;
   res, i: Integer;
   urlget: string;
   AJsonString: string;
-//  vChannel: TShortChannel;
+
   vImgUrl: string;
   g: TGraphic;
   ssimg: TStringStream;
   vSS: TStringStream;
   SS: TStringStream;
-  // S: AnsiString;
+
   jpegimg: TJPEGImage;
   S: string;
   AAPIUrl: String;
   FHTTPClient: THTTPClient;
   AResponce: IHTTPResponse;
+  vVideo: TrVideo;
+
+  vPosX, vPosY : integer;
 
 begin
+  //vPosX
   vNPanel :=   TButton(Sender).Tag;
   vIdChannel := PanChannels[vNPanel].chId.Caption;
   vToken := PanChannels[vNPanel].chToken.Caption;
@@ -292,8 +303,8 @@ begin
   OAuth2.ClientID :=
     '701561007019-tm4gfmequr8ihqbpqeui28rp343lpo8b.apps.googleusercontent.com';
   OAuth2.ClientSecret := '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';
-//  OAuth2.ResponseCode := Edit1.Text;
-  showmessage(vToken);
+  // OAuth2.ResponseCode := Edit1.Text;
+  //showmessage(vToken);
   OAuth2.refresh_token := vToken;
    {
   Access_token := OAuth2.GetAccessToken;
@@ -302,57 +313,44 @@ begin
   EdAccess_token.Text := Access_token;
   }
   // подробней о канале
- // пока не нужно vString := OAuth2.MyChannels;
+  // пока не нужно vString := OAuth2.MyChannels;
+
   // о видео
   vString :=  OAuth2.MyVideos(vIdChannel); // , NextToken: string = '' -- xfcnm cktle.ofz
   Memo1.Text := vString;
   OAuth2.Free;
+  //PanelChannels.Visible := false;
   // разбор XML
-
   vObj.Create;
-  vObj := TJson.JsonToObject<Tchannel>(Memo1.Text);
-
+  vObj := TJson.JsonToObject<Tvideo>(vString);
+{
   for i := 0 to Length(vObj.Items) - 1 do
   begin
-    vChannel.id_channel := vObj.Items[i].id;
-    vChannel.name_channel := vObj.Items[i].snippet.title;
-    vImgUrl := vObj.Items[i].snippet.thumbnails.default.URL;
-    Edit4.Text := vImgUrl;
-    try
-
-      S := StringReplace(Edit4.Text, #13, '', [rfReplaceAll, rfIgnoreCase]);
-      AAPIUrl := StringReplace(S, #10, '', [rfReplaceAll, rfIgnoreCase]);
-      FHTTPClient := THTTPClient.Create;
-      FHTTPClient.UserAgent :=
-        'Mozilla/5.0 (Windows; U; Windows NT 6.1; ru-RU) Gecko/20100625 Firefox/3.6.6';
-      try
-        AResponce := FHTTPClient.Get(AAPIUrl);
-      except
-        showmessage('нет подключения');
-      end;
-      if Not Assigned(AResponce) then
-      begin
-        showmessage('Пусто');
-      end;
-
-      jpegimg := TJPEGImage.Create;
-      jpegimg.LoadFromStream(AResponce.ContentStream);
-      Image2.Picture.Assign(jpegimg);
-      // Image2.Picture.LoadFromStream(SQLiteModule.LoadAnyImage(vImgUrl));
-    except
-    end;
-
-    vChannel.refresh_token := EdRefresh_token.Text;
-    vChannel.lang := vObj.Items[i].snippet.defaultLanguage;
-    // vChannel.sel_lang := vObj.;
-    vChannel.deleted := 0;
-    res := SQLiteModule.InsRefreshToken(vChannel);
+    vVideo.videoId := vObj.Items[i].id.videoId;
+    vVideo.channelId := vObj.Items[i].id.channelId;
+    vVideo.title := vObj.Items[i].snippet.title;
+    vVideo.description := vObj.Items[i].snippet.description; //5000?
+    vVideo.urlDefault := vObj.Items[i].snippet.thumbnails.default.url;
+    vVideo.publishedAt := StrToDateTime(vObj.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
+    vVideo.publishTime := StrToDateTime(vObj.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
+    vPosX := (i) * 120;
+    vPosY := 8;
+    showmessage(vVideo.title);
+    PanVideos[i] := TMyVideoPanel.Create(ScrollBoxVideo, vPosX, vPosY, i,
+      vVideo.videoId, vToken,
+      vVideo.title, vVideo.description, 'Eng',
+      vVideo.urlDefault);
   end;
 
-//  ButtonGetChannel2.OnClick(Sender);
+  PanelChannels.Visible := false;
+  PanelVideos.Visible := true;
+  }
+end;
 
-  // отображение видео
-//  RefreshCannelsClick(FormMain);
+procedure TFormMain.ButtEndClick(Sender: TObject);
+begin
+  PanelVideos.Visible := false;
+  PanelChannels.Visible := true;
 end;
 
 procedure TFormMain.Button1Click(Sender: TObject);
