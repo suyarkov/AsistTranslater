@@ -2,7 +2,7 @@ unit Classes.channel;
 
 interface
 
-uses Classes.shearche.pageInfo, Classes.channel.item, Classes.channel.items;
+uses Classes.shearche.pageInfo, Classes.channel.item;
 
 type
   Tchannel = class

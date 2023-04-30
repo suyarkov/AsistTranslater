@@ -22,10 +22,10 @@ uses
   ChannelPanel in 'ChannelPanel.pas',
   Unit1 in 'Unit1.pas' {Form1},
   Classes.video in 'Classes.video.pas',
-  Classes.video.thumbnails in 'Classes.video.thumbnails.pas',
-  Classes.video.snippet in 'Classes.video.snippet.pas',
+  VideoPanel in 'VideoPanel.pas',
   Classes.video.item in 'Classes.video.item.pas',
-  VideoPanel in 'VideoPanel.pas';
+  Classes.video.snippet in 'Classes.video.snippet.pas',
+  Classes.video.thumbnails in 'Classes.video.thumbnails.pas';
 
 {$R *.res}
 

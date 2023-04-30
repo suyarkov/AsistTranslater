@@ -290,7 +290,9 @@ var
 
 begin
   //vPosX
-  vObjVideo.Create;
+  //FormMain.ButtEndClick(Sender);
+
+  //vObjVideo.Create;
   vNPanel :=   TButton(Sender).Tag;
   vIdChannel := PanChannels[vNPanel].chId.Caption;
   vToken := PanChannels[vNPanel].chToken.Caption;
@@ -321,6 +323,8 @@ begin
   vString :=  OAuth2.MyVideos(vIdChannel); // , NextToken: string = '' -- xfcnm cktle.ofz
   Memo1.Text := vString;
   OAuth2.Free;
+  // разбор XML
+  FormMain.ButtEndClick(Sender);
   //PanelChannels.Visible := false;
   // разбор XML
 //  vObj.Create;
@@ -351,13 +355,46 @@ end;
 
 procedure TFormMain.ButtEndClick(Sender: TObject);
 var
-   vObj: Tchannel;
+   //vObj: Tchannel;
+   vObjVideo:  TObjvideo;
+
+  jpegimg: TJPEGImage;
+  S: string;
+  AAPIUrl: String;
+  FHTTPClient: THTTPClient;
+  AResponce: IHTTPResponse;
+  vVideo: TrVideo;
+
+  vPosX, vPosY : integer;
+  i:integer;
+  vToken : string;
 begin
-{  PanelVideos.Visible := false;
-  PanelChannels.Visible := true;}
-  vObj.Create;
-  //vObj := TJson.JsonToObject<Tchannel>(Memo1.Text);
-  //vObj.Free;
+
+  vToken :='0';
+  vObjVideo.Create;
+  vObjVideo := TJson.JsonToObject<TObjvideo>(Memo1.Text);
+
+  for i := 0 to Length(vObjVideo.Items) - 1 do
+  begin
+    vVideo.videoId := vObjVideo.Items[i].id.videoId;
+    vVideo.channelId := vObjVideo.Items[i].id.channelId;
+    vVideo.title := vObjVideo.Items[i].snippet.title;
+    vVideo.description := vObjVideo.Items[i].snippet.description; //5000?
+    vVideo.urlDefault := vObjVideo.Items[i].snippet.thumbnails.default.url;
+//    vVideo.publishedAt := StrToDateTime(vObjVideo.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
+//    vVideo.publishTime := StrToDateTime(vObjVideo.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
+    vPosX := i * 120;
+    vPosY := 8;
+    PanVideos[i+1] := TMyVideoPanel.Create(ScrollBoxVideo, vPosX, vPosY, i,
+      vVideo.videoId, vToken,
+      vVideo.title, vVideo.description, 'Eng',
+      vVideo.urlDefault);
+    PanVideos[i+1].Parent := ScrollBoxVideo;
+  end;
+
+  PanelChannels.Visible := false;
+  PanelVideos.Visible := true;
+
 end;
 
 procedure TFormMain.Button1Click(Sender: TObject);

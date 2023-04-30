@@ -268,8 +268,8 @@ object FormMain: TFormMain
       Visible = False
     end
     object Memo1: TMemo
-      Left = 16
-      Top = 307
+      Left = -64
+      Top = 328
       Width = 692
       Height = 65
       Lines.Strings = (
@@ -454,16 +454,16 @@ object FormMain: TFormMain
     OnClick = ButtEndClick
   end
   object PanelVideos: TPanel
-    Left = 40
+    Left = 44
     Top = 8
-    Width = 601
-    Height = 401
+    Width = 724
+    Height = 361
     TabOrder = 3
     Visible = False
     object ScrollBoxVideo: TScrollBox
-      Left = 8
+      Left = 5
       Top = 8
-      Width = 569
+      Width = 708
       Height = 385
       TabOrder = 0
     end

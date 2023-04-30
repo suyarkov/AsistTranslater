@@ -33,7 +33,7 @@ implementation
 constructor TMyVideoPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-//  Parent := AOwner;
+  //Parent := AOwner;
   ControlStyle := ControlStyle + [csReplicatable];
   Width := 585;
   Height := 105;
@@ -41,6 +41,7 @@ begin
   ParentColor := false;
   StyleElements := [seFont,seBorder];
   BevelOuter :=  bvNone;
+  Visible := true;
 end;
 
 constructor TMyVideoPanel.Create(AOwner: TComponent; pPosX, pPosY, pN: integer;
@@ -58,6 +59,7 @@ begin
   Self.Top := 8 + pPosX;
   //Self.Name := 'P' + IntToStr(pN);
   Self.tag :=  pN;
+  //self.Parent := AOwner;
 
   vdId := TLabel.Create(Self);
   with vdId do
@@ -86,9 +88,9 @@ begin
     Width := 449;
     Top:=  25;
     Height :=  21;
-    left := 120;
+    left := 130;
     Font.Size := 12;
-    Font.Style := [fsBold];
+    //Font.Style := [fsBold];
     Tag :=  pN;
     Visible := True;
   end;
@@ -97,11 +99,11 @@ begin
   with vdImage do
   begin
     Parent := Self;
-    Height := 88;
+    Height := 90;
     Left := 8;
     Top := 8;
-    Width := 88;
-    Tag :=  pN;{
+    Width := 120;
+    Tag :=  pN;
       try
 
         vS := StringReplace(pUrlImage, #13, '', [rfReplaceAll, rfIgnoreCase]);
@@ -123,7 +125,7 @@ begin
         jpegimg.LoadFromStream(AResponce.ContentStream);
         vdImage.Picture.Assign(jpegimg);
       except
-      end;      }
+      end;
     Visible := True;
   end;
 end;
