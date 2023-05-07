@@ -95,6 +95,23 @@ begin
     Visible := True;
   end;
 
+  vdDescription := TLabel.Create(Self);
+  with vdDescription do
+  begin
+    Parent := Self;
+    Caption := pVideoDescription;
+    Name := 'D' + IntToStr(pN);
+    Width := 449;
+    Top:=  25;
+    Height :=  21;
+    left := 130;
+    Font.Size := 12;
+    //Font.Style := [fsBold];
+    Tag :=  pN;
+    Visible := false;
+  end;
+
+
   vdImage := TImage.Create(Self);
   with vdImage do
   begin

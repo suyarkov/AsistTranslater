@@ -48,9 +48,14 @@ type
     Button3: TButton;
     ScrollBox1: TScrollBox;
     RefreshCannels: TButton;
-    ButtEnd: TButton;
+    ButtEnd2: TButton;
     PanelVideos: TPanel;
     ScrollBoxVideo: TScrollBox;
+    ButtEnd1: TButton;
+    ButtVideo: TButton;
+    PanelTitleVideo: TPanel;
+    MemTitle: TMemo;
+    MemDis: TMemo;
     procedure ButtonSignInClick(Sender: TObject);
     procedure ButtonStartStopServerClick(Sender: TObject);
     procedure IdTCPServer1Execute(AContext: TIdContext);
@@ -74,7 +79,8 @@ type
     procedure ScrollBox1MouseWheelUp(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; var Handled: Boolean);
     procedure RefreshCannelsClick(Sender: TObject);
-    procedure ButtEndClick(Sender: TObject);
+    procedure ButtEnd2Click(Sender: TObject);
+    procedure ButtVideoClick(Sender: TObject);
   private
     { Private declarations }
     ShortChannels: TShortChannels;
@@ -234,21 +240,19 @@ end;
 procedure TFormMain.DinButtonDeleteChannelClick(Sender: TObject);
 var
   strQuestionDelete, vIdChannel, vNameChannel: string;
-  vNPanel : integer;
+  vNPanel: Integer;
 begin
-  vNPanel :=   TButton(Sender).Tag;
+  vNPanel := TButton(Sender).Tag;
   vIdChannel := PanChannels[vNPanel].chId.Caption;
   vNameChannel := PanChannels[vNPanel].chName.Caption;
-  strQuestionDelete := 'Delete ' + vNameChannel  + ' ?';
-  if MessageDlg(strQuestionDelete,
-  mtConfirmation, [mbYes, mbNo], 0) = mrYes
+  strQuestionDelete := 'Delete ' + vNameChannel + ' ?';
+  if MessageDlg(strQuestionDelete, mtConfirmation, [mbYes, mbNo], 0) = mrYes
   then
   begin
-  SQLiteModule.DelChannel(vIdChannel);
-  RefreshCannelsClick(FormMain);
+    SQLiteModule.DelChannel(vIdChannel);
+    RefreshCannelsClick(FormMain);
   end;
 end;
-
 
 procedure TFormMain.DinPanelClick(Sender: TObject);
 const
@@ -264,10 +268,10 @@ var
   vString: string;
 
   strQuestionDelete, vIdChannel, vNameChannel: string;
-  vNPanel : integer;
-  vToken : string;
+  vNPanel: Integer;
+  vToken: string;
 
-//  vObj: Tvideo;
+  // vObj: Tvideo;
   vObjVideo: Tchannel;
   res, i: Integer;
   urlget: string;
@@ -286,20 +290,20 @@ var
   AResponce: IHTTPResponse;
   vVideo: TrVideo;
 
-  vPosX, vPosY : integer;
+  vPosX, vPosY: Integer;
 
 begin
-  //vPosX
-  //FormMain.ButtEndClick(Sender);
+  // vPosX
+  // FormMain.ButtEndClick(Sender);
 
-  //vObjVideo.Create;
-  vNPanel :=   TButton(Sender).Tag;
+  // vObjVideo.Create;
+  vNPanel := TButton(Sender).Tag;
   vIdChannel := PanChannels[vNPanel].chId.Caption;
   vToken := PanChannels[vNPanel].chToken.Caption;
   vNameChannel := PanChannels[vNPanel].chName.Caption;
   strQuestionDelete := 'Click ' + vNameChannel + ' !';
 
-  showmessage(strQuestionDelete);
+  //showmessage(strQuestionDelete);
 
   // запрос видео
 
@@ -308,30 +312,31 @@ begin
     '701561007019-tm4gfmequr8ihqbpqeui28rp343lpo8b.apps.googleusercontent.com';
   OAuth2.ClientSecret := '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';
   // OAuth2.ResponseCode := Edit1.Text;
-  //showmessage(vToken);
+  // showmessage(vToken);
   OAuth2.refresh_token := vToken;
-   {
-  Access_token := OAuth2.GetAccessToken;
-  refresh_token := OAuth2.refresh_token;
-  EdRefresh_token.Text := refresh_token;
-  EdAccess_token.Text := Access_token;
+  {
+    Access_token := OAuth2.GetAccessToken;
+    refresh_token := OAuth2.refresh_token;
+    EdRefresh_token.Text := refresh_token;
+    EdAccess_token.Text := Access_token;
   }
   // подробней о канале
   // пока не нужно vString := OAuth2.MyChannels;
 
   // о видео
-  vString :=  OAuth2.MyVideos(vIdChannel); // , NextToken: string = '' -- xfcnm cktle.ofz
+  vString := OAuth2.MyVideos(vIdChannel);
+  // , NextToken: string = '' -- xfcnm cktle.ofz
   Memo1.Text := vString;
   OAuth2.Free;
   // разбор XML
-  FormMain.ButtEndClick(Sender);
-  //PanelChannels.Visible := false;
+  FormMain.ButtEnd2Click(Sender);
+  // PanelChannels.Visible := false;
   // разбор XML
-//  vObj.Create;
-//  vObj := TJson.JsonToObject<Tvideo>(vString);
-{
-  for i := 0 to Length(vObj.Items) - 1 do
-  begin
+  // vObj.Create;
+  // vObj := TJson.JsonToObject<Tvideo>(vString);
+  {
+    for i := 0 to Length(vObj.Items) - 1 do
+    begin
     vVideo.videoId := vObj.Items[i].id.videoId;
     vVideo.channelId := vObj.Items[i].id.channelId;
     vVideo.title := vObj.Items[i].snippet.title;
@@ -343,20 +348,20 @@ begin
     vPosY := 8;
     showmessage(vVideo.title);
     PanVideos[i] := TMyVideoPanel.Create(ScrollBoxVideo, vPosX, vPosY, i,
-      vVideo.videoId, vToken,
-      vVideo.title, vVideo.description, 'Eng',
-      vVideo.urlDefault);
-  end;
+    vVideo.videoId, vToken,
+    vVideo.title, vVideo.description, 'Eng',
+    vVideo.urlDefault);
+    end;
 
-  PanelChannels.Visible := false;
-  PanelVideos.Visible := true;
+    PanelChannels.Visible := false;
+    PanelVideos.Visible := true;
   }
 end;
 
-procedure TFormMain.ButtEndClick(Sender: TObject);
+procedure TFormMain.ButtEnd2Click(Sender: TObject);
 var
-   //vObj: Tchannel;
-   vObjVideo:  TObjvideo;
+  // vObj: Tchannel;
+  vObjVideo: TObjvideo;
 
   jpegimg: TJPEGImage;
   S: string;
@@ -365,12 +370,12 @@ var
   AResponce: IHTTPResponse;
   vVideo: TrVideo;
 
-  vPosX, vPosY : integer;
-  i:integer;
-  vToken : string;
+  vPosX, vPosY: Integer;
+  i: Integer;
+  vToken: string;
 begin
-
-  vToken :='0';
+  PanelVideos.Left := 44;
+  vToken := '0';
   vObjVideo.Create;
   vObjVideo := TJson.JsonToObject<TObjvideo>(Memo1.Text);
 
@@ -379,17 +384,20 @@ begin
     vVideo.videoId := vObjVideo.Items[i].id.videoId;
     vVideo.channelId := vObjVideo.Items[i].id.channelId;
     vVideo.title := vObjVideo.Items[i].snippet.title;
-    vVideo.description := vObjVideo.Items[i].snippet.description; //5000?
-    vVideo.urlDefault := vObjVideo.Items[i].snippet.thumbnails.default.url;
-//    vVideo.publishedAt := StrToDateTime(vObjVideo.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
-//    vVideo.publishTime := StrToDateTime(vObjVideo.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
+    vVideo.description := vObjVideo.Items[i].snippet.description; // 5000?
+    vVideo.urlDefault := vObjVideo.Items[i].snippet.thumbnails.default.URL;
+    // vVideo.publishedAt := StrToDateTime(vObjVideo.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
+    // vVideo.publishTime := StrToDateTime(vObjVideo.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
     vPosX := i * 120;
     vPosY := 8;
-    PanVideos[i+1] := TMyVideoPanel.Create(ScrollBoxVideo, vPosX, vPosY, i,
-      vVideo.videoId, vToken,
-      vVideo.title, vVideo.description, 'Eng',
+    PanVideos[i + 1] := TMyVideoPanel.Create(ScrollBoxVideo, vPosX, vPosY, i+1,
+      vVideo.videoId, vToken, vVideo.title, vVideo.description, 'Eng',
       vVideo.urlDefault);
-    PanVideos[i+1].Parent := ScrollBoxVideo;
+    PanVideos[i + 1].Parent := ScrollBoxVideo;
+    PanVideos[i + 1].OnClick := ButtVideoClick;
+   { PanVideos[i + 1].vdTitle.OnClick := ButtVideoClick;
+    PanVideos[i + 1].vdDescription.OnClick := ButtVideoClick;
+    PanVideos[i + 1].vdImage.OnClick := ButtVideoClick;}
   end;
 
   PanelChannels.Visible := false;
@@ -656,9 +664,9 @@ begin
       PanChannels[i].Parent := ScrollBox1;
       PanChannels[i].ButtonDel.OnClick := DinButtonDeleteChannelClick;
       PanChannels[i].OnMouseMove := DinPanelMouseMove;
-      PanChannels[i].OnClick := DinPanelClick;//Type (sender, 'TPanel');
+      PanChannels[i].OnClick := DinPanelClick; // Type (sender, 'TPanel');
       PanChannels[i].ChImage.OnClick := DinPanelClick;
-      PanChannels[i].ChName.OnClick := DinPanelClick;
+      PanChannels[i].chName.OnClick := DinPanelClick;
       PanChannels[i].ChLang.OnClick := DinPanelClick;
       // это рабочий вариант прямо с поля взять, не из таблицы!!
       // g.Assign(results.FieldByName('img_channel'));
@@ -699,18 +707,36 @@ begin
     showmessage('включил сервер');
   end;
   {
-  if IdTCPServer1.Active then
-  begin
+    if IdTCPServer1.Active then
+    begin
     IdTCPServer1.Active := false;
     IdTCPServer1.Bindings.Add.Port := 1111;
     showmessage('ВЫключил сервер');
-  end
-  else
-  begin
+    end
+    else
+    begin
     IdTCPServer1.Active := true;
     showmessage('включил сервер');
 
-  end;}
+    end; }
+end;
+
+procedure TFormMain.ButtVideoClick(Sender: TObject);
+var
+  vNPanel: Integer;
+  vIdVideo, vNameVideo, strQuestion: string;
+begin
+  vNPanel := TButton(Sender).Tag;
+//  showmessage(IntToStr(vNPanel));
+  vIdVideo := PanVideos[vNPanel].vdId.Caption;
+  // vToken := PanChannels[vNPanel].chToken.Caption;
+  vNameVideo := PanVideos[vNPanel].vdTitle.Caption;
+//  strQuestion := 'Click ' + vNameVideo + ' !';
+//showmessage(strQuestion);
+  MemTitle.Text := PanVideos[vNPanel].vdTitle.Caption;
+  MemDis.Text := PanVideos[vNPanel].vdDescription.Caption;
+  PanelVideos.visible := false;
+  PanelTitleVideo.Visible := true;
 end;
 
 procedure TFormMain.IdTCPServer1Execute(AContext: TIdContext);
@@ -825,16 +851,16 @@ begin
 end;
 
 procedure TFormMain.RefreshCannelsClick(Sender: TObject);
-var i : integer;
+var
+  i: Integer;
 begin
   try
     for i := 1 to 20 do
       PanChannels[i].Free;
   finally
-    lastPanel:= nil;
-    ButtonLoadChannelsClick(sender);
+    lastPanel := nil;
+    ButtonLoadChannelsClick(Sender);
   end;
-
 
 end;
 

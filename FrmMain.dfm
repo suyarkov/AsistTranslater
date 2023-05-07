@@ -438,12 +438,12 @@ object FormMain: TFormMain
       OnMouseWheelUp = ScrollBox1MouseWheelUp
     end
   end
-  object ButtEnd: TButton
-    Left = 0
-    Top = 8
+  object ButtEnd2: TButton
+    Left = 4
+    Top = 130
     Width = 34
     Height = 25
-    Caption = '<'
+    Caption = '!!!'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clRed
     Font.Height = -12
@@ -451,10 +451,10 @@ object FormMain: TFormMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 2
-    OnClick = ButtEndClick
+    OnClick = ButtEnd2Click
   end
   object PanelVideos: TPanel
-    Left = 44
+    Left = 644
     Top = 8
     Width = 724
     Height = 361
@@ -466,6 +466,56 @@ object FormMain: TFormMain
       Width = 708
       Height = 385
       TabOrder = 0
+    end
+  end
+  object ButtEnd1: TButton
+    Left = 5
+    Top = 8
+    Width = 33
+    Height = 25
+    Caption = '<'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 4
+  end
+  object ButtVideo: TButton
+    Left = 0
+    Top = 393
+    Width = 65
+    Height = 25
+    Caption = 'ButtVideo'
+    TabOrder = 5
+    Visible = False
+    OnClick = ButtVideoClick
+  end
+  object PanelTitleVideo: TPanel
+    Left = 77
+    Top = -6
+    Width = 561
+    Height = 393
+    TabOrder = 6
+    Visible = False
+    object MemTitle: TMemo
+      Left = 72
+      Top = 16
+      Width = 473
+      Height = 121
+      Lines.Strings = (
+        'MemTitle')
+      TabOrder = 0
+    end
+    object MemDis: TMemo
+      Left = 72
+      Top = 152
+      Width = 473
+      Height = 201
+      Lines.Strings = (
+        'MemDis')
+      TabOrder = 1
     end
   end
   object IdTCPServer1: TIdTCPServer

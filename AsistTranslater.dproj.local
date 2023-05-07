@@ -1,40 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.249,=D:\GitClicker\AsistTranslater\Classes.video.thumbnails.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.934,=D:\GitClicker\AsistTranslater\Classes.video.thumbnails.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.230,=D:\GitClicker\AsistTranslater\Classes.shearche.pageInfo.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.283,=D:\GitClicker\AsistTranslater\Classes.channel.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.849,=D:\GitClicker\AsistTranslater\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.697,=D:\GitClicker\AsistTranslater\Classes.video.item.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.161,=D:\GitClicker\AsistTranslater\Classes.shearche.item.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.576,=D:\GitClicker\AsistTranslater\ChannelPanel.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.227,=D:\GitClicker\AsistTranslater\uTranslate.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.283,=D:\GitClicker\AsistTranslater\Classes.channel.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.249,=D:\GitClicker\AsistTranslater\Classes.video.thumbnails.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.697,=D:\GitClicker\AsistTranslater\Classes.video.item.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.953,D:\GitClicker\AsistTranslater\FrmDataSQLite.dfm=D:\GitClicker\AsistTranslater\DataSQLite.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.261,=D:\GitClicker\AsistTranslater\Classes.shearche.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.914,D:\GitClicker\AsistTranslater\FrmMain.pas=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.580,=D:\GitClicker\AsistTranslater\Classes.channel.items.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.233,D:\GitClicker\AsistTranslater\Classes.channel.items.pas=</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.390,D:\GitClicker\AsistTranslater\AsistTranslater.dproj=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.953,D:\GitClicker\AsistTranslater\FrmDataSQLite.pas=D:\GitClicker\AsistTranslater\DataSQLite.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.622,=D:\GitClicker\AsistTranslater\Classes.video.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.763,=D:\GitClicker\AsistTranslater\Classes.video.item.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.324,=D:\GitClicker\AsistTranslater\Classes.shearche.thumbnails.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.389,=D:\GitClicker\AsistTranslater\Classes.video.snippet.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.953,D:\GitClicker\AsistTranslater\DataSQLite.dfm=D:\GitClicker\AsistTranslater\FrmDataSQLite.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.129,=D:\GitClicker\AsistTranslater\Classes.shearche.image.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.069,=D:\GitClicker\AsistTranslater\OAuth2.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.622,=D:\GitClicker\AsistTranslater\Classes.video.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.216,=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.914,D:\GitClicker\AsistTranslater\FrmMain.dfm=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.953,D:\GitClicker\AsistTranslater\DataSQLite.pas=D:\GitClicker\AsistTranslater\FrmDataSQLite.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.844,=D:\GitClicker\AsistTranslater\Classes.video.snippet.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.293,=D:\GitClicker\AsistTranslater\Classes.shearche.snippet.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.879,=D:\GitClicker\AsistTranslater\Classes.channel.item.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.487,=D:\GitClicker\AsistTranslater\DataSQLite.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.129,=D:\GitClicker\AsistTranslater\Classes.shearche.image.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.069,=D:\GitClicker\AsistTranslater\OAuth2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.580,=D:\GitClicker\AsistTranslater\Classes.channel.items.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.233,D:\GitClicker\AsistTranslater\Classes.channel.items.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.097,=D:\GitClicker\AsistTranslater\Classes.shearche.id.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.914,C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\GitClicker\AsistTranslater\FrmMain.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.914,C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\GitClicker\AsistTranslater\FrmMain.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.516,=D:\GitClicker\AsistTranslater\Classes.channel.statistics.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.198,=D:\GitClicker\AsistTranslater\Classes.shearche.items.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.218,D:\GitClicker\AsistTranslater\Classes.shearche.items.pas=</Transaction>
     <Transaction>1899.12.30 00:00:00.000.422,=D:\GitClicker\AsistTranslater\Classes.channel.snippet.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.293,=D:\GitClicker\AsistTranslater\Classes.shearche.snippet.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.216,=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.575,=C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.745,=D:\GitClicker\AsistTranslater\VideoPanel.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.097,=D:\GitClicker\AsistTranslater\Classes.shearche.id.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.516,=D:\GitClicker\AsistTranslater\Classes.channel.statistics.pas</Transaction>
-    <Transaction>2023.04.30 13:10:09.763,=D:\GitClicker\AsistTranslater\Classes.video.item.pas</Transaction>
-    <Transaction>2023.04.30 13:10:09.844,=D:\GitClicker\AsistTranslater\Classes.video.snippet.pas</Transaction>
-    <Transaction>2023.04.30 13:10:09.934,=D:\GitClicker\AsistTranslater\Classes.video.thumbnails.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.390,C:\Users\Dmitry\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\GitClicker\AsistTranslater\AsistTranslater.dproj</Transaction>
   </Transactions>
 </BorlandProject>
