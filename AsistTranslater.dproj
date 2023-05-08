@@ -136,6 +136,10 @@
         <DCCReference Include="Classes.video.item.pas"/>
         <DCCReference Include="Classes.video.snippet.pas"/>
         <DCCReference Include="Classes.video.thumbnails.pas"/>
+        <DCCReference Include="FrmWait.pas">
+            <Form>FormWait</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

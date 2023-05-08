@@ -25,7 +25,8 @@ uses
   VideoPanel in 'VideoPanel.pas',
   Classes.video.item in 'Classes.video.item.pas',
   Classes.video.snippet in 'Classes.video.snippet.pas',
-  Classes.video.thumbnails in 'Classes.video.thumbnails.pas';
+  Classes.video.thumbnails in 'Classes.video.thumbnails.pas',
+  FrmWait in 'FrmWait.pas' {FormWait};
 
 {$R *.res}
 
@@ -36,5 +37,6 @@ begin
   Application.CreateForm(TFormMain, FormMain);
   Application.CreateForm(TSQLiteModule, SQLiteModule);
   Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TFormWait, FormWait);
   Application.Run;
 end.

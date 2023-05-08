@@ -1,9 +1,9 @@
 object FormMain: TFormMain
   Left = 0
   Top = 0
-  Caption = 'AsistTranslater'
-  ClientHeight = 502
-  ClientWidth = 772
+  Caption = 'AsistYou'
+  ClientHeight = 697
+  ClientWidth = 945
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,15 +15,15 @@ object FormMain: TFormMain
   TextHeight = 15
   object PanelButton: TPanel
     Left = 0
-    Top = 424
-    Width = 772
+    Top = 619
+    Width = 945
     Height = 78
     Align = alBottom
     Color = clCream
     ParentBackground = False
     TabOrder = 0
-    ExplicitTop = 420
-    ExplicitWidth = 770
+    ExplicitTop = 615
+    ExplicitWidth = 943
     object ImageSignIn: TImage
       Left = 13
       Top = 16
@@ -135,16 +135,16 @@ object FormMain: TFormMain
       OnClick = ButtonSignInClick
     end
     object ButtonStartStopServer: TButton
-      Left = 286
+      Left = 550
       Top = 16
-      Width = 179
+      Width = 129
       Height = 25
       Caption = 'ButtonStartStopServer'
       TabOrder = 1
       OnClick = ButtonStartStopServerClick
     end
     object ButtonGetChannel: TButton
-      Left = 486
+      Left = 685
       Top = 16
       Width = 107
       Height = 25
@@ -153,7 +153,7 @@ object FormMain: TFormMain
       OnClick = ButtonGetChannelClick
     end
     object ButtonGetChannel2: TButton
-      Left = 614
+      Left = 798
       Top = 15
       Width = 107
       Height = 25
@@ -162,7 +162,7 @@ object FormMain: TFormMain
       OnClick = ButtonGetChannel2Click
     end
     object Edit4: TEdit
-      Left = 296
+      Left = 456
       Top = 47
       Width = 437
       Height = 23
@@ -171,9 +171,9 @@ object FormMain: TFormMain
       Visible = False
     end
     object RefreshCannels: TButton
-      Left = 232
+      Left = 456
       Top = 16
-      Width = 75
+      Width = 88
       Height = 25
       Caption = 'RefreshCannels'
       TabOrder = 5
@@ -181,10 +181,10 @@ object FormMain: TFormMain
     end
   end
   object PanelChannels: TPanel
-    Left = 614
-    Top = 8
-    Width = 713
-    Height = 409
+    Left = 104
+    Top = 86
+    Width = 908
+    Height = 419
     Caption = 'PanelChannels'
     ShowCaption = False
     TabOrder = 1
@@ -202,26 +202,26 @@ object FormMain: TFormMain
       ParentFont = False
     end
     object Image1: TImage
-      Left = 588
+      Left = 649
       Top = 11
       Width = 105
       Height = 105
     end
     object Image2: TImage
-      Left = 588
+      Left = 649
       Top = 122
       Width = 105
       Height = 105
     end
     object ProgressBarTranslater: TProgressBar
-      Left = 603
-      Top = 165
+      Left = 760
+      Top = 149
       Width = 150
       Height = 17
       TabOrder = 0
     end
     object ButtonBuy: TButton
-      Left = 672
+      Left = 760
       Top = 12
       Width = 81
       Height = 25
@@ -268,8 +268,8 @@ object FormMain: TFormMain
       Visible = False
     end
     object Memo1: TMemo
-      Left = -64
-      Top = 328
+      Left = 13
+      Top = 339
       Width = 692
       Height = 65
       Lines.Strings = (
@@ -386,8 +386,8 @@ object FormMain: TFormMain
       TabOrder = 6
     end
     object ButtonLoadChannels: TButton
-      Left = 678
-      Top = 80
+      Left = 760
+      Top = 43
       Width = 139
       Height = 25
       Caption = 'ButtonLoadChannels'
@@ -395,8 +395,8 @@ object FormMain: TFormMain
       OnClick = ButtonLoadChannelsClick
     end
     object Button1: TButton
-      Left = 672
-      Top = 188
+      Left = 760
+      Top = 107
       Width = 130
       Height = 25
       Caption = #1042#1089#1090#1072#1074#1082#1072' '#1073#1083#1086#1073
@@ -413,19 +413,19 @@ object FormMain: TFormMain
       OnClick = Button2Click
     end
     object Button3: TButton
-      Left = 672
-      Top = 134
+      Left = 760
+      Top = 74
       Width = 139
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1086#1073#1098#1077#1082#1090#1072
       TabOrder = 10
       OnClick = Button3Click
     end
-    object ScrollBox1: TScrollBox
+    object ScrollBoxChannels: TScrollBox
       Left = 13
       Top = 43
-      Width = 569
-      Height = 258
+      Width = 596
+      Height = 290
       HorzScrollBar.ButtonSize = 10
       HorzScrollBar.Visible = False
       VertScrollBar.ButtonSize = 12
@@ -433,15 +433,15 @@ object FormMain: TFormMain
       ParentShowHint = False
       ShowHint = False
       TabOrder = 11
-      OnMouseMove = ScrollBox1MouseMove
-      OnMouseWheelDown = ScrollBox1MouseWheelDown
-      OnMouseWheelUp = ScrollBox1MouseWheelUp
+      OnMouseMove = ScrollBoxChannelsMouseMove
+      OnMouseWheelDown = ScrollBoxChannelsMouseWheelDown
+      OnMouseWheelUp = ScrollBoxChannelsMouseWheelUp
     end
   end
   object ButtEnd2: TButton
-    Left = 4
-    Top = 130
-    Width = 34
+    Left = 0
+    Top = 31
+    Width = 23
     Height = 25
     Caption = '!!!'
     Font.Charset = DEFAULT_CHARSET
@@ -454,24 +454,27 @@ object FormMain: TFormMain
     OnClick = ButtEnd2Click
   end
   object PanelVideos: TPanel
-    Left = 644
-    Top = 8
+    Left = 264
+    Top = 425
     Width = 724
     Height = 361
     TabOrder = 3
     Visible = False
     object ScrollBoxVideo: TScrollBox
-      Left = 5
+      Left = 13
       Top = 8
       Width = 708
       Height = 385
+      BorderStyle = bsNone
+      ParentShowHint = False
+      ShowHint = False
       TabOrder = 0
     end
   end
-  object ButtEnd1: TButton
-    Left = 5
-    Top = 8
-    Width = 33
+  object ButtBack: TButton
+    Left = 0
+    Top = 0
+    Width = 23
     Height = 25
     Caption = '<'
     Font.Charset = DEFAULT_CHARSET
@@ -481,10 +484,11 @@ object FormMain: TFormMain
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 4
+    OnClick = ButtBackClick
   end
   object ButtVideo: TButton
     Left = 0
-    Top = 393
+    Top = 425
     Width = 65
     Height = 25
     Caption = 'ButtVideo'
@@ -493,36 +497,68 @@ object FormMain: TFormMain
     OnClick = ButtVideoClick
   end
   object PanelTitleVideo: TPanel
-    Left = 77
-    Top = -6
+    Left = 26
+    Top = 0
     Width = 561
     Height = 393
     TabOrder = 6
     Visible = False
+    object TimeVideoSend: TLabel
+      Left = 20
+      Top = 134
+      Width = 82
+      Height = 15
+      Caption = 'TimeVideoSend'
+    end
+    object TimeVideoOpen: TLabel
+      Left = 20
+      Top = 173
+      Width = 85
+      Height = 15
+      Caption = 'TimeVideoOpen'
+    end
+    object Image3: TImage
+      Left = 20
+      Top = 11
+      Width = 105
+      Height = 105
+    end
     object MemTitle: TMemo
-      Left = 72
+      Left = 144
       Top = 16
-      Width = 473
+      Width = 401
       Height = 121
       Lines.Strings = (
         'MemTitle')
       TabOrder = 0
+      StyleElements = [seFont, seClient]
     end
     object MemDis: TMemo
-      Left = 72
+      Left = 144
       Top = 152
-      Width = 473
+      Width = 401
       Height = 201
       Lines.Strings = (
         'MemDis')
+      ScrollBars = ssVertical
       TabOrder = 1
+      StyleElements = [seFont, seClient]
     end
+  end
+  object Button4: TButton
+    Left = 0
+    Top = 368
+    Width = 20
+    Height = 25
+    Caption = 'Button4'
+    TabOrder = 7
+    OnClick = Button4Click
   end
   object IdTCPServer1: TIdTCPServer
     Bindings = <>
     DefaultPort = 1904
     OnExecute = IdTCPServer1Execute
-    Left = 576
-    Top = 352
+    Left = 456
+    Top = 408
   end
 end

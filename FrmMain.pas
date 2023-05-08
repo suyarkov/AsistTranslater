@@ -19,7 +19,7 @@ uses
   FrmDataSQLite, Vcl.DBCtrls,
   FireDAC.Comp.DataSet, Data.FMTBcd, Data.DB, Data.SqlExpr, Vcl.Menus,
   Classes.channel, ChannelPanel, Classes.video,
-  REST.JSON, PNGImage, VideoPanel;
+  REST.JSON, PNGImage, VideoPanel, FrmWait;
 
 type
   TFormMain = class(TForm)
@@ -46,16 +46,20 @@ type
     Image2: TImage;
     Button2: TButton;
     Button3: TButton;
-    ScrollBox1: TScrollBox;
+    ScrollBoxChannels: TScrollBox;
     RefreshCannels: TButton;
     ButtEnd2: TButton;
     PanelVideos: TPanel;
     ScrollBoxVideo: TScrollBox;
-    ButtEnd1: TButton;
+    ButtBack: TButton;
     ButtVideo: TButton;
     PanelTitleVideo: TPanel;
     MemTitle: TMemo;
     MemDis: TMemo;
+    TimeVideoSend: TLabel;
+    TimeVideoOpen: TLabel;
+    Image3: TImage;
+    Button4: TButton;
     procedure ButtonSignInClick(Sender: TObject);
     procedure ButtonStartStopServerClick(Sender: TObject);
     procedure IdTCPServer1Execute(AContext: TIdContext);
@@ -72,15 +76,17 @@ type
       X, Y: Integer);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure ScrollBox1MouseMove(Sender: TObject; Shift: TShiftState;
+    procedure ScrollBoxChannelsMouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
-    procedure ScrollBox1MouseWheelDown(Sender: TObject; Shift: TShiftState;
-      MousePos: TPoint; var Handled: Boolean);
-    procedure ScrollBox1MouseWheelUp(Sender: TObject; Shift: TShiftState;
+    procedure ScrollBoxChannelsMouseWheelDown(Sender: TObject;
+      Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+    procedure ScrollBoxChannelsMouseWheelUp(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; var Handled: Boolean);
     procedure RefreshCannelsClick(Sender: TObject);
     procedure ButtEnd2Click(Sender: TObject);
     procedure ButtVideoClick(Sender: TObject);
+    procedure ButtBackClick(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
     ShortChannels: TShortChannels;
@@ -130,9 +136,12 @@ end;
 procedure TFormMain.FormCreate(Sender: TObject);
 begin
   lastPanel := nil;
-  FormMain.PanelChannels.Left := 40;
+  FormMain.ClientWidth := 640;
+  FormMain.ClientHeight := 480;
+  FormMain.PanelChannels.Left := 26;
   FormMain.PanelChannels.Top := 0;
   FormMain.PanelChannels.Visible := true;
+  ButtBack.Enabled := false;
 end;
 
 function ParamValue(ParamName, JSONString: string): string;
@@ -254,10 +263,10 @@ begin
   end;
 end;
 
+// Нажатие по каналу чтоб выбрать видео
 procedure TFormMain.DinPanelClick(Sender: TObject);
 const
   tokenurl = 'https://accounts.google.com/o/oauth2/token';
-  redirect_uri1 = 'http://127.0.0.1:1904';
 var
   Params: TDictionary<String, String>;
   Response: string;
@@ -293,20 +302,15 @@ var
   vPosX, vPosY: Integer;
 
 begin
-  // vPosX
-  // FormMain.ButtEndClick(Sender);
 
-  // vObjVideo.Create;
   vNPanel := TButton(Sender).Tag;
   vIdChannel := PanChannels[vNPanel].chId.Caption;
   vToken := PanChannels[vNPanel].chToken.Caption;
   vNameChannel := PanChannels[vNPanel].chName.Caption;
-  strQuestionDelete := 'Click ' + vNameChannel + ' !';
-
-  //showmessage(strQuestionDelete);
+  // Для сообщения при отладке что нажали
+  // strQuestionDelete := 'Click ' + vNameChannel + ' !';
 
   // запрос видео
-
   OAuth2 := TOAuth.Create;
   OAuth2.ClientID :=
     '701561007019-tm4gfmequr8ihqbpqeui28rp343lpo8b.apps.googleusercontent.com';
@@ -320,16 +324,22 @@ begin
     EdRefresh_token.Text := refresh_token;
     EdAccess_token.Text := Access_token;
   }
+
   // подробней о канале
   // пока не нужно vString := OAuth2.MyChannels;
-
   // о видео
   vString := OAuth2.MyVideos(vIdChannel);
   // , NextToken: string = '' -- xfcnm cktle.ofz
   Memo1.Text := vString;
   OAuth2.Free;
+{f pos('Error',Memo1.Text) > 0 then
+  begin
+    showmessage(vString);
+  end;}
+
   // разбор XML
   FormMain.ButtEnd2Click(Sender);
+  ButtBack.Enabled := true;
   // PanelChannels.Visible := false;
   // разбор XML
   // vObj.Create;
@@ -358,6 +368,23 @@ begin
   }
 end;
 
+procedure TFormMain.ButtBackClick(Sender: TObject);
+begin
+  if PanelVideos.Visible = true then
+  begin
+    PanelChannels.Visible := true;
+    PanelVideos.Visible := false;
+    ButtBack.Enabled := false;
+  end
+  else
+    if PanelTitleVideo.Visible = true then
+    begin
+    PanelVideos.Visible := true;
+    PanelTitleVideo.Visible := false;
+    end;
+
+end;
+
 procedure TFormMain.ButtEnd2Click(Sender: TObject);
 var
   // vObj: Tchannel;
@@ -374,7 +401,8 @@ var
   i: Integer;
   vToken: string;
 begin
-  PanelVideos.Left := 44;
+  PanelVideos.Left := 26;
+  PanelVideos.Top := 0;
   vToken := '0';
   vObjVideo.Create;
   vObjVideo := TJson.JsonToObject<TObjvideo>(Memo1.Text);
@@ -390,14 +418,14 @@ begin
     // vVideo.publishTime := StrToDateTime(vObjVideo.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
     vPosX := i * 120;
     vPosY := 8;
-    PanVideos[i + 1] := TMyVideoPanel.Create(ScrollBoxVideo, vPosX, vPosY, i+1,
-      vVideo.videoId, vToken, vVideo.title, vVideo.description, 'Eng',
+    PanVideos[i + 1] := TMyVideoPanel.Create(ScrollBoxVideo, vPosX, vPosY,
+      i + 1, vVideo.videoId, vToken, vVideo.title, vVideo.description, 'Eng',
       vVideo.urlDefault);
     PanVideos[i + 1].Parent := ScrollBoxVideo;
     PanVideos[i + 1].OnClick := ButtVideoClick;
-   { PanVideos[i + 1].vdTitle.OnClick := ButtVideoClick;
-    PanVideos[i + 1].vdDescription.OnClick := ButtVideoClick;
-    PanVideos[i + 1].vdImage.OnClick := ButtVideoClick;}
+    { PanVideos[i + 1].vdTitle.OnClick := ButtVideoClick;
+      PanVideos[i + 1].vdDescription.OnClick := ButtVideoClick;
+      PanVideos[i + 1].vdImage.OnClick := ButtVideoClick; }
   end;
 
   PanelChannels.Visible := false;
@@ -506,6 +534,11 @@ begin
     end;
     ShortChannels := results;
   end;
+end;
+
+procedure TFormMain.Button4Click(Sender: TObject);
+begin
+  FormWait.ShowModal;
 end;
 
 procedure TFormMain.ButtonBuyClick(Sender: TObject);
@@ -656,12 +689,12 @@ begin
     begin
 
       vPos := (i - 1) * 120;
-      PanChannels[i] := TMyPanel.Create(ScrollBox1, vPos, i,
+      PanChannels[i] := TMyPanel.Create(ScrollBoxChannels, vPos, i,
         results.FieldByName('id_channel').AsString,
         results.FieldByName('refresh_token').AsString,
         results.FieldByName('name_channel').AsString,
         results.FieldByName('lang').AsString);
-      PanChannels[i].Parent := ScrollBox1;
+      PanChannels[i].Parent := ScrollBoxChannels;
       PanChannels[i].ButtonDel.OnClick := DinButtonDeleteChannelClick;
       PanChannels[i].OnMouseMove := DinPanelMouseMove;
       PanChannels[i].OnClick := DinPanelClick; // Type (sender, 'TPanel');
@@ -727,16 +760,18 @@ var
   vIdVideo, vNameVideo, strQuestion: string;
 begin
   vNPanel := TButton(Sender).Tag;
-//  showmessage(IntToStr(vNPanel));
+  // showmessage(IntToStr(vNPanel));
   vIdVideo := PanVideos[vNPanel].vdId.Caption;
   // vToken := PanChannels[vNPanel].chToken.Caption;
   vNameVideo := PanVideos[vNPanel].vdTitle.Caption;
-//  strQuestion := 'Click ' + vNameVideo + ' !';
-//showmessage(strQuestion);
+  // strQuestion := 'Click ' + vNameVideo + ' !';
+  // showmessage(strQuestion);
   MemTitle.Text := PanVideos[vNPanel].vdTitle.Caption;
   MemDis.Text := PanVideos[vNPanel].vdDescription.Caption;
-  PanelVideos.visible := false;
+  PanelVideos.Visible := false;
   PanelTitleVideo.Visible := true;
+  PanelTitleVideo.Left := 26;
+  PanelTitleVideo.Top := 0;
 end;
 
 procedure TFormMain.IdTCPServer1Execute(AContext: TIdContext);
@@ -864,8 +899,8 @@ begin
 
 end;
 
-procedure TFormMain.ScrollBox1MouseMove(Sender: TObject; Shift: TShiftState;
-  X, Y: Integer);
+procedure TFormMain.ScrollBoxChannelsMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
 begin
   if lastPanel <> nil then
   begin
@@ -875,17 +910,17 @@ begin
   end;
 end;
 
-procedure TFormMain.ScrollBox1MouseWheelDown(Sender: TObject;
+procedure TFormMain.ScrollBoxChannelsMouseWheelDown(Sender: TObject;
   Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
 begin
-  with ScrollBox1.VertScrollBar do
+  with ScrollBoxChannels.VertScrollBar do
     Position := Position + Increment;
 end;
 
-procedure TFormMain.ScrollBox1MouseWheelUp(Sender: TObject; Shift: TShiftState;
-  MousePos: TPoint; var Handled: Boolean);
+procedure TFormMain.ScrollBoxChannelsMouseWheelUp(Sender: TObject;
+  Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
 begin
-  with ScrollBox1.VertScrollBar do
+  with ScrollBoxChannels.VertScrollBar do
     Position := Position - Increment;
 end;
 
