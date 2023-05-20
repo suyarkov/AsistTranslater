@@ -60,6 +60,7 @@ type
     TimeVideoOpen: TLabel;
     Image3: TImage;
     Button4: TButton;
+    TimerTest: TTimer;
     procedure ButtonSignInClick(Sender: TObject);
     procedure ButtonStartStopServerClick(Sender: TObject);
     procedure IdTCPServer1Execute(AContext: TIdContext);
@@ -87,6 +88,11 @@ type
     procedure ButtVideoClick(Sender: TObject);
     procedure ButtBackClick(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure TimerTestTimer(Sender: TObject);
+    procedure ScrollBoxVideoMouseWheelDown(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
+    procedure ScrollBoxVideoMouseWheelUp(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; var Handled: Boolean);
   private
     { Private declarations }
     ShortChannels: TShortChannels;
@@ -303,6 +309,14 @@ var
 
 begin
 
+  //Button4Click(Sender);
+  try
+    for i := 1 to 50 do
+      PanVideos[i].Free;
+  finally
+    lastPanel := nil;
+  end;
+
   vNPanel := TButton(Sender).Tag;
   vIdChannel := PanChannels[vNPanel].chId.Caption;
   vToken := PanChannels[vNPanel].chToken.Caption;
@@ -327,45 +341,29 @@ begin
 
   // подробней о канале
   // пока не нужно vString := OAuth2.MyChannels;
-  // о видео
-  vString := OAuth2.MyVideos(vIdChannel);
-  // , NextToken: string = '' -- xfcnm cktle.ofz
-  Memo1.Text := vString;
-  OAuth2.Free;
-{f pos('Error',Memo1.Text) > 0 then
-  begin
-    showmessage(vString);
-  end;}
+  try
+    // о видео
+    // открытие окна ожидания
+    FormMain.Enabled := false;
+    FormWait.Show;
+    vString := OAuth2.MyVideos(vIdChannel);
 
-  // разбор XML
-  FormMain.ButtEnd2Click(Sender);
-  ButtBack.Enabled := true;
-  // PanelChannels.Visible := false;
-  // разбор XML
-  // vObj.Create;
-  // vObj := TJson.JsonToObject<Tvideo>(vString);
-  {
-    for i := 0 to Length(vObj.Items) - 1 do
-    begin
-    vVideo.videoId := vObj.Items[i].id.videoId;
-    vVideo.channelId := vObj.Items[i].id.channelId;
-    vVideo.title := vObj.Items[i].snippet.title;
-    vVideo.description := vObj.Items[i].snippet.description; //5000?
-    vVideo.urlDefault := vObj.Items[i].snippet.thumbnails.default.url;
-    vVideo.publishedAt := StrToDateTime(vObj.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
-    vVideo.publishTime := StrToDateTime(vObj.Items[i].snippet.publishedAt);//"2023-04-08T17:37:31Z"
-    vPosX := (i) * 120;
-    vPosY := 8;
-    showmessage(vVideo.title);
-    PanVideos[i] := TMyVideoPanel.Create(ScrollBoxVideo, vPosX, vPosY, i,
-    vVideo.videoId, vToken,
-    vVideo.title, vVideo.description, 'Eng',
-    vVideo.urlDefault);
-    end;
+    // , NextToken: string = '' -- xfcnm cktle.ofz
+    Memo1.Text := vString;
+    OAuth2.Free;
+    { f pos('Error',Memo1.Text) > 0 then
+      begin
+      showmessage(vString);
+      end; }
+    // разбор XML
+    FormMain.ButtEnd2Click(Sender);
+    ButtBack.Enabled := true;
+  finally
+    // прячем окно ожидания
+    FormMain.Enabled := true;
+    FormWait.Visible := false;
+  end;
 
-    PanelChannels.Visible := false;
-    PanelVideos.Visible := true;
-  }
 end;
 
 procedure TFormMain.ButtBackClick(Sender: TObject);
@@ -376,12 +374,11 @@ begin
     PanelVideos.Visible := false;
     ButtBack.Enabled := false;
   end
-  else
-    if PanelTitleVideo.Visible = true then
-    begin
+  else if PanelTitleVideo.Visible = true then
+  begin
     PanelVideos.Visible := true;
     PanelTitleVideo.Visible := false;
-    end;
+  end;
 
 end;
 
@@ -422,10 +419,11 @@ begin
       i + 1, vVideo.videoId, vToken, vVideo.title, vVideo.description, 'Eng',
       vVideo.urlDefault);
     PanVideos[i + 1].Parent := ScrollBoxVideo;
+    PanVideos[i + 1].OnMouseMove := DinPanelMouseMove;
     PanVideos[i + 1].OnClick := ButtVideoClick;
-    { PanVideos[i + 1].vdTitle.OnClick := ButtVideoClick;
-      PanVideos[i + 1].vdDescription.OnClick := ButtVideoClick;
-      PanVideos[i + 1].vdImage.OnClick := ButtVideoClick; }
+    PanVideos[i + 1].vdTitle.OnClick := ButtVideoClick;
+    PanVideos[i + 1].vdDescription.OnClick := ButtVideoClick;
+    PanVideos[i + 1].vdImage.OnClick := ButtVideoClick;
   end;
 
   PanelChannels.Visible := false;
@@ -538,7 +536,11 @@ end;
 
 procedure TFormMain.Button4Click(Sender: TObject);
 begin
-  FormWait.ShowModal;
+  // FormMain.visible := false;
+  FormMain.Enabled := false;
+  FormWait.Show;
+  TimerTest.Enabled := true;
+
 end;
 
 procedure TFormMain.ButtonBuyClick(Sender: TObject);
@@ -922,6 +924,27 @@ procedure TFormMain.ScrollBoxChannelsMouseWheelUp(Sender: TObject;
 begin
   with ScrollBoxChannels.VertScrollBar do
     Position := Position - Increment;
+end;
+
+procedure TFormMain.ScrollBoxVideoMouseWheelDown(Sender: TObject;
+  Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+begin
+  with ScrollBoxVideo.VertScrollBar do
+    Position := Position + Increment;
+end;
+
+procedure TFormMain.ScrollBoxVideoMouseWheelUp(Sender: TObject;
+  Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);
+begin
+  with ScrollBoxVideo.VertScrollBar do
+    Position := Position - Increment;
+end;
+
+procedure TFormMain.TimerTestTimer(Sender: TObject);
+begin
+  TimerTest.Enabled := false;
+  FormMain.Enabled := true;
+  FormWait.Visible := false;
 end;
 
 end.

@@ -426,10 +426,9 @@ object FormMain: TFormMain
       Top = 43
       Width = 596
       Height = 290
-      HorzScrollBar.ButtonSize = 10
+      HorzScrollBar.ButtonSize = 6
       HorzScrollBar.Visible = False
       VertScrollBar.ButtonSize = 12
-      BorderStyle = bsNone
       ParentShowHint = False
       ShowHint = False
       TabOrder = 11
@@ -454,21 +453,24 @@ object FormMain: TFormMain
     OnClick = ButtEnd2Click
   end
   object PanelVideos: TPanel
-    Left = 264
-    Top = 425
+    Left = 181
+    Top = 444
     Width = 724
-    Height = 361
+    Height = 403
     TabOrder = 3
     Visible = False
     object ScrollBoxVideo: TScrollBox
       Left = 13
       Top = 8
-      Width = 708
+      Width = 598
       Height = 385
-      BorderStyle = bsNone
+      HorzScrollBar.Visible = False
       ParentShowHint = False
       ShowHint = False
       TabOrder = 0
+      OnMouseMove = ScrollBoxChannelsMouseMove
+      OnMouseWheelDown = ScrollBoxVideoMouseWheelDown
+      OnMouseWheelUp = ScrollBoxVideoMouseWheelUp
     end
   end
   object ButtBack: TButton
@@ -560,5 +562,12 @@ object FormMain: TFormMain
     OnExecute = IdTCPServer1Execute
     Left = 456
     Top = 408
+  end
+  object TimerTest: TTimer
+    Enabled = False
+    Interval = 5000
+    OnTimer = TimerTestTimer
+    Left = 64
+    Top = 536
   end
 end
